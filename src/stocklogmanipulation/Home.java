@@ -1,42 +1,10 @@
 package stocklogmanipulation;
 
+import stocklogmanipulation.DBconnection;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-
-// 패널 3
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.io.UnsupportedEncodingException;
-import java.sql.*;
-import javax.swing.table.*;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-
-// 패널 3.2
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Scanner;
-
-// 하단바에 대한 동작을 처리하는 클래스
-class Panel6Action { // 매도주식
-    public static void addFunctionality(JPanel panel) {
-        // 하단바에 추가할 기능 구현
-    }
-}
 
 public class Home {
     static String userId; // 사용자 id 저장 변수 추가
@@ -69,7 +37,6 @@ public class Home {
         Panel3Action.addFunctionality(bottomLeftPanel, userId); // 관심 주식 표시
         Panel4Action.addFunctionality(bottomRightPanel, userId); // 보유 주식 표시
         Panel5Action.addFunctionality(rightPanel, userId); // 패널 5에 기능 추가
-        Panel6Action.addFunctionality(bottomPanel); // 하단 바에 기능 추가
 
         JPanel panel11_1 = new JPanel();
         panel11_1.setLayout(new GridLayout(1, 2));
@@ -105,6 +72,12 @@ public class Home {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+
+        // Panel6Action 객체 생성
+        Panel6Action panel6Action = new Panel6Action();
+
+        // executeApiRequestAndDisplayInPanel 메서드 호출
+        panel6Action.executeApiRequestAndDisplayInPanel(bottomPanel);
     }
 
     private JPanel createPanelWithBorder(String text) {
@@ -121,7 +94,10 @@ public class Home {
 
     public static void main(String[] args) {
         DBconnection dbConnector = new DBconnection();
+
+
         SwingUtilities.invokeLater(() -> {
+            // Home 객체 생성
             Home home = new Home(userId);
         });
     }
