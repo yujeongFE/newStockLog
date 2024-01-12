@@ -30,7 +30,7 @@ class PanelAction1_1 { // 매도주식
         try {
             // 시작 및 종료 날짜를 Unix 타임스탬프로 변환
             long 시작날짜 = convertDateToTimestamp("20240101");
-            long 종료날짜 = convertDateToTimestamp("20240107");
+            long 종료날짜 = convertDateToTimestamp("20240111");
 
             // 업데이트된 날짜 범위로 Yahoo Finance API URL 작성 (코스닥 심볼: ^KQ11)
             String apiUrl = "https://query1.finance.yahoo.com/v8/finance/chart/^KQ11?period1=" + 시작날짜 +

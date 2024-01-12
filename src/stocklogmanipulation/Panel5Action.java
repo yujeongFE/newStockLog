@@ -27,7 +27,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-class Panel5Action { // 주식 매매 기록
+public class Panel5Action { // 주식 매매 기록
     static Object[] row = new Object[8];
     static DefaultTableModel tableModel = new DefaultTableModel();
 
@@ -87,9 +87,9 @@ class Panel5Action { // 주식 매매 기록
                         JTable target = (JTable) e.getSource();
                         int row = target.getSelectedRow();
 
-                        // 여기서 선택된 행의 데이터를 얻을 수 있어요.
+                        // 여기서 선택된 행의 데이터
                         String stockName = (String) tableModel.getValueAt(row, 0);
-                        new Home2(userId, stockName);
+                        new StockInfo_new(userId, stockName);
                     }
                 }
             });

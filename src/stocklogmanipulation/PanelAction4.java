@@ -10,13 +10,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -90,7 +87,7 @@ class PanelAction4 { // 보유주식
             // 테이블 생성 및 패널에 추가
             JTable table = new JTable(tableModel);
 
-            // 주식 클릭하면 Home2 화면으로 이동
+            // 주식 클릭하면 StockInfo_new 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -101,7 +98,7 @@ class PanelAction4 { // 보유주식
                         // 여기서 선택된 행의 데이터를 얻을 수 있어요.
                         String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
                         // System.out.println(stockName);
-                        new Home2(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
                     }
                 }
             });
