@@ -2,6 +2,7 @@ package stocklogmanipulation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.sql.*;
 import java.awt.event.MouseAdapter;
@@ -22,7 +23,7 @@ public class Panel2Action { // 매도주식
 
         String id = userId;
         // SQL 쿼리 실행
-        String query = "SELECT sl.COMPANY, s.NAME, sl.S_DATE, sl.S_PRICE, sl.QTY, sl.RRATIO, sl.ALL, sl.TAX, sl.B_DATE, sl.E_PRICE, sl.MEMO FROM stock s, sellstock sl WHERE s.CODE = sl.CODE AND U_ID = '" + id + "'";
+        String query = "SELECT sl.COMPANY, s.NAME, sl.S_DATE, sl.S_PRICE, sl.QTY, sl.RRATIO, sl.ALLB, sl.TAX, sl.B_DATE, sl.E_PRICE, sl.MEMO FROM stock s, sellstock sl WHERE s.CODE = sl.CODE AND U_ID = '" + id + "'";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -63,6 +64,11 @@ public class Panel2Action { // 매도주식
 
             // 테이블 생성 및 패널에 추가
             JTable table = new JTable(tableModel);
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            // Set the font size for cell content
+            table.setFont(new Font("SansSerif", Font.PLAIN, 15));
 
             // 주식 클릭하면 Home2 화면으로 이동
             table.addMouseListener(new MouseAdapter() {

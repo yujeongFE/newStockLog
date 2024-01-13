@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
@@ -78,8 +79,19 @@ class PanelAction3 { // 관심주식
             } else {
             }
 
+
+            // 전체 화면 size 가져오기
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            // width, height 설정
+            int width = screenSize.width / 3;
+            int height = (screenSize.height-145) / 2;
+            int fullheight = screenSize.height-145;
+
+
             // JButton 생성 및 패널에 추가
             JButton searchButton = new JButton("관심 주식 추가");
+            searchButton.setFont(new Font("Arial", Font.PLAIN, 17));
+            searchButton.setPreferredSize(new Dimension( screenSize.width,34));
             searchButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -96,6 +108,10 @@ class PanelAction3 { // 관심주식
 
             // 테이블 생성 및 패널에 추가
             JTable table = new JTable(tableModel);
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
             // 주식 클릭하면 StockInfo_new 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
@@ -248,32 +264,7 @@ class PanelAction3 { // 관심주식
         interestFrame.setLayout(new BorderLayout());
 
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        //스크롤이 되나 보려고 많이 넣어놓은 것
-        listModel.addElement("삼성");
-        listModel.addElement("삼성1");
-        listModel.addElement("삼성2");
-        listModel.addElement("삼성3");
-        listModel.addElement("삼성4");
-        listModel.addElement("삼성5");
-        listModel.addElement("삼성6");
-        listModel.addElement("삼성7");
-        listModel.addElement("삼성8");
-        listModel.addElement("삼성9");
-        listModel.addElement("삼성10");
-        listModel.addElement("삼성11");
-        listModel.addElement("삼성12");
-        listModel.addElement("삼성13");
-        listModel.addElement("삼성14");
-        listModel.addElement("삼성15");
-        listModel.addElement("삼성16");
-        listModel.addElement("삼성17");
-        listModel.addElement("삼성18");
-        listModel.addElement("삼성19");
-        listModel.addElement("삼성20");
-        listModel.addElement("삼성21");
-        listModel.addElement("삼성22");
-        listModel.addElement("삼성23");
-        listModel.addElement("현대");
+
 
         JList<String> searchList = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(searchList);
@@ -339,4 +330,5 @@ class PanelAction3 { // 관심주식
             scrollPane.setVisible(true);
             interestFrame.revalidate();
         });
-    }}
+    }
+}

@@ -10,7 +10,9 @@ import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,6 +26,9 @@ import java.net.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 // 패널 3에 대한 동작을 처리하는 클래스
 public class Panel3Action { // 관심주식
@@ -54,6 +59,8 @@ public class Panel3Action { // 관심주식
             tableModel.addColumn("전일대비등락비");
             tableModel.addColumn("메모");
 
+
+
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화
             while (resultSet.next()) {
@@ -82,9 +89,13 @@ public class Panel3Action { // 관심주식
                 }
             } else {
             }
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
             // JButton 생성 및 패널에 추가
             JButton searchButton = new JButton("관심 주식 추가");
+            searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
+            searchButton.setPreferredSize(new Dimension( screenSize.width,34));
+
             searchButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -101,6 +112,12 @@ public class Panel3Action { // 관심주식
 
             // 테이블 생성 및 패널에 추가
             JTable table = new JTable(tableModel);
+
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            // 폰트 사이즈
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
             // 주식 클릭하면 Home2 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
@@ -127,8 +144,6 @@ public class Panel3Action { // 관심주식
             // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
             Dimension panelSize = panel.getPreferredSize();
             int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
-
-            System.out.println(newScrollPaneHeight);
 
             scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
 
@@ -341,7 +356,6 @@ public class Panel3Action { // 관심주식
                 if (!alreadyExists) {
                     try {
                         // Get the user input from the text field
-
                         String searchKeyword = text.getText();
 
                         // Encode the search term
@@ -352,14 +366,12 @@ public class Panel3Action { // 관심주식
                         String frdt = dateRange[0];
                         String todt = dateRange[1];
 
-                        System.out.println(encodedSearchTerm);
-
                         // Make the API request
                         StringBuffer stockPriceData = getStockPriceWithDifferentParam(encodedSearchTerm, frdt, todt);
 
                         if (stockPriceData.length() > 0) {
                             // Update the UI based on the response
-                            System.out.println("Stock Price Data:\n" + stockPriceData.toString());
+                            System.out.println("Stock Price Data:2\n" + stockPriceData.toString());
                         } else {
                             System.out.println("No stock price data available for the specified parameters.");
                         }
@@ -539,7 +551,7 @@ public class Panel3Action { // 관심주식
 
                         if (stockPriceData.length() > 0) {
                             // Update the UI based on the response
-                            System.out.println("Stock Price Data:\n" + stockPriceData.toString());
+                            System.out.println("1Stock Price Data:\n" + stockPriceData.toString());
 
                             // XML 파싱
                             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
