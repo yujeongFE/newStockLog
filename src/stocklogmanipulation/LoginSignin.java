@@ -27,10 +27,16 @@ public class LoginSignin {
         JPanel panel = new JPanel(new GridBagLayout());
 
         JLabel l1 = new JLabel("ID"); // id
+        l1.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
         JTextField text = new JTextField(15);
+        text.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
+
 
         JLabel l2 = new JLabel("passwd"); // ps
+        l2.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
         JPasswordField value = new JPasswordField(15);
+        value.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
+
 
         // id
         ((AbstractDocument) text.getDocument()).setDocumentFilter(new DocumentFilter() {
@@ -56,11 +62,16 @@ public class LoginSignin {
         });
 
         JButton loginButton = new JButton("로그인");
+        loginButton.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
+
 
         JLabel notMemberLabel = new JLabel("아직 회원이 아니신가요?");
         notMemberLabel.setForeground(Color.GRAY);
+        notMemberLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
+
 
         JLabel signUpLabel = new JLabel("회원가입");
+        signUpLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 20));
         signUpLabel.setForeground(Color.BLACK);
         signUpLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         signUpLabel.addMouseListener(new MouseAdapter() {
@@ -69,20 +80,35 @@ public class LoginSignin {
                 JFrame signUpFrame = new JFrame("회원가입");
                 JPanel signUpPanel = new JPanel(new GridBagLayout());
 
+
+
                 JLabel l11 = new JLabel("ID");
+                l11.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
                 JTextField signUpID = new JTextField(15);
+                signUpID.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
+
+
 
                 JLabel l12 = new JLabel("passwd");
+                l12.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
                 JPasswordField signUpPasswd = new JPasswordField(15);
+                signUpPasswd.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
+
 
                 JLabel l13 = new JLabel("passwd 확인");
+                l13.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
                 JPasswordField signUpPasswdConfirm = new JPasswordField(15);
+                signUpPasswdConfirm.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
 
                 JLabel l14 = new JLabel("이름");
+                l14.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
                 JTextField signUpName = new JTextField(15);
+                signUpName.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
 
                 JLabel l15 = new JLabel("전화번호");
+                l15.setFont(new Font("맑은 고딕맑은 고딕", Font.PLAIN, 25));
                 JFormattedTextField signUpTel = new JFormattedTextField(createFormatter("###-####-####"));
+                signUpTel.setFont(new Font("Arial", Font.PLAIN, 25));
 
                 // id
                 ((AbstractDocument) signUpID.getDocument()).setDocumentFilter(new DocumentFilter() {
@@ -122,7 +148,7 @@ public class LoginSignin {
                     @Override
                     public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
                             throws BadLocationException {
-                        if (text.matches("[a-zA-Z가-힣]*")) {
+                        if (text.matches("[a-zA-Z]*")) {
                             super.replace(fb, offset, length, text, attrs);
                         }
                     }
@@ -141,6 +167,8 @@ public class LoginSignin {
 
                 // 회원가입
                 JButton signUpButton = new JButton("회원가입");
+                signUpButton.setFont(new Font("Arial", Font.PLAIN, 25));
+
                 signUpButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -225,7 +253,7 @@ public class LoginSignin {
                 signUpPanel.add(signUpButton, signUpGbc);
 
                 signUpFrame.add(signUpPanel);
-                signUpFrame.setSize(400, 300);
+                signUpFrame.setSize(700, 700);
                 signUpFrame.setLocationRelativeTo(loginFrame);
                 signUpFrame.setVisible(true);
                 signUpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -303,6 +331,7 @@ public class LoginSignin {
                 }
             }
         });
+
 
         loginFrame.setVisible(true);
     }
