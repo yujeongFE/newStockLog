@@ -119,6 +119,7 @@ public class StockInfo_new {
             H2_PanelAction5.addFunctionality(internalPanel5, stockName); // 패널 5에 기능 추가
             H2_PanelAction5_1.addFunctionality(internalPanel5_1); // 패널5-1에 기능 추가
             PanelAction6.addFunctionality(internalPanel6, userId, stockName); // 패널 6에 기능 추가
+            Panel6Action.executeApiRequestAndDisplayInPanel(bottomPanel); // 하단 바에 기능 추가
 
             frame.add(desktopPane);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

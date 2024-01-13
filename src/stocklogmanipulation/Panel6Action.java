@@ -36,7 +36,7 @@ public class Panel6Action {
         System.out.println(response);
     }
 
-    public void executeApiRequestAndDisplayInPanel(JPanel panel) {
+    public static void executeApiRequestAndDisplayInPanel(JPanel panel) {
         try {
             long 시작날짜 = convertDateToTimestamp("20240101");
             long 종료날짜 = convertDateToTimestamp("20240107");
@@ -51,7 +51,7 @@ public class Panel6Action {
             String kosdaqResponse = executeApiRequest(kosdaqUrl);
 
             processJsonResponseAndDisplayInPanel(kospiResponse, panel, "KOSPI");
-            processJsonResponseAndDisplayInPanel(kosdaqResponse, panel, "KOSDAQ");
+            processJsonResponseAndDisplayInPanel(kosdaqResponse, panel, "   KOSDAQ");
 
             // Additional functionality to scrape and display Naver Finance data
             executeNaverFinanceScrapingAndDisplayInPanel(panel);
@@ -61,7 +61,7 @@ public class Panel6Action {
         }
     }
 
-    private String executeApiRequest(String apiUrl) throws Exception {
+    private static String executeApiRequest(String apiUrl) throws Exception {
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -86,7 +86,7 @@ public class Panel6Action {
         }
     }
 
-    private void processJsonResponseAndDisplayInPanel(String jsonResponse, JPanel panel, String market) {
+    private static void processJsonResponseAndDisplayInPanel(String jsonResponse, JPanel panel, String market) {
         try {
             JSONObject json = new JSONObject(jsonResponse);
             JSONArray resultArray = json.getJSONObject("chart").getJSONArray("result");
@@ -103,7 +103,7 @@ public class Panel6Action {
         }
     }
 
-    private void executeNaverFinanceScrapingAndDisplayInPanel(JPanel panel) {
+    private static void executeNaverFinanceScrapingAndDisplayInPanel(JPanel panel) {
         try {
             String naverFinanceUrl = "https://finance.naver.com/sise/investorDealTrendDay.nhn?bizdate=20240112";
 
@@ -118,14 +118,14 @@ public class Panel6Action {
             List<String> selectedUpList = upList.subList(0, Math.min(upList.size(), 1));
 
             // Display the extracted elements in the panel
-            displayDataInPanel(panel, "개인, 외국인", selectedDownList, Color.BLUE);
-            displayDataInPanel(panel, "기관계", selectedUpList, Color.RED);
+            displayDataInPanel(panel, "  개인, 외국인 ", selectedDownList, Color.BLUE);
+            displayDataInPanel(panel, "기관계 ", selectedUpList, Color.RED);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private List<String> scrapeRateData(String url, String className) throws IOException {
+    private static List<String> scrapeRateData(String url, String className) throws IOException {
         Document document = Jsoup.connect(url).get();
         Elements elements = document.select("td." + className);
 
@@ -137,7 +137,7 @@ public class Panel6Action {
         return dataList;
     }
 
-    private void displayDataInPanel(JPanel panel, String labelTitle, List<String> dataList, Color labelColor) {
+    private static void displayDataInPanel(JPanel panel, String labelTitle, List<String> dataList, Color labelColor) {
         JLabel titleLabel = new JLabel(labelTitle);
         titleLabel.setFont(new Font("Malgun Gothic", Font.PLAIN, 14));
         titleLabel.setForeground(Color.BLACK);
@@ -154,25 +154,23 @@ public class Panel6Action {
         panel.repaint();
     }
 
-    private void displayValuesInPanel(JPanel panel, double chartPreviousClose, double regularMarketPrice,
-                                      double difference, int priceHint, String market) {
+    private static void displayValuesInPanel(JPanel panel, double chartPreviousClose, double regularMarketPrice,
+                                             double difference, int priceHint, String market) {
         JLabel label;
 
         if (difference < 0) {
             label = new JLabel(
-                    market + " " +
-                            "▼ " +
-                            chartPreviousClose + " " +
-                            regularMarketPrice + " " +
-                            String.format("%.2f", difference) + " "
+                    market + "  " +
+                            "▼  " +
+                            chartPreviousClose + "  " +
+                            String.format("%.2f", difference) + "  "
             );
         } else {
             label = new JLabel(
-                    market + " " +
-                            "▲ " +
-                            chartPreviousClose + " " +
-                            regularMarketPrice + " " +
-                            String.format("%.2f", difference) + " "
+                    market + "  " +
+                            "▲  " +
+                            chartPreviousClose + "  " +
+                            String.format("%.2f", difference) + "  "
             );
         }
 

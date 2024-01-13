@@ -3,8 +3,8 @@ package stocklogmanipulation;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
-import javax.swing.JToolBar;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Home_new {
     static String userId; // 사용자 id 저장 변수 추가
@@ -87,7 +87,7 @@ public class Home_new {
             Panel3Action.addFunctionality(internalPanel3, userId); // 관심 주식 표시
             Panel4Action.addFunctionality(internalPanel4, userId); // 보유 주식 표시
             Panel5Action.addFunctionality(internalPanel5, userId); // 패널 5에 기능 추가
-            // Panel6Action.addFunctionality(bottomPanel); // 하단 바에 기능 추가
+            Panel6Action.executeApiRequestAndDisplayInPanel(bottomPanel); // 하단 바에 기능 추가
 
             frame.add(desktopPane);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
