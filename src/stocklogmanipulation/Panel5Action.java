@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
@@ -65,7 +66,19 @@ public class Panel5Action { // 주식 매매 기록
                 tableModel.addRow(row);
             }
 
+
+            // 전체 화면 size 가져오기
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            // width, height 설정
+            int width = screenSize.width / 3;
+            int height = (screenSize.height-145) / 2;
+            int fullheight = screenSize.height-145;
+
+
             JButton searchButton = new JButton("매도/매수 기록 추가");
+            searchButton.setFont(new Font("굴림", Font.PLAIN, 17));
+            searchButton.setPreferredSize(new Dimension( screenSize.width,34));
+
             searchButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -78,6 +91,10 @@ public class Panel5Action { // 주식 매매 기록
             panel.add(label, BorderLayout.NORTH);
 
             JTable table = new JTable(tableModel);
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            table.setFont(new Font("굴림", Font.PLAIN, 15));
 
             // 주식 클릭하면 Home2 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
@@ -122,7 +139,6 @@ public class Panel5Action { // 주식 매매 기록
         JLabel l1 = new JLabel();
         JTextField text = new JTextField(15);
 
-        // Create a DefaultListModel to store search results
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
         searchList = new JList<>(listModel);
@@ -151,7 +167,6 @@ public class Panel5Action { // 주식 매매 기록
             }
         });
 
-        // Add mouse click event listener for searchList
         searchList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
@@ -63,7 +64,19 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
                 tableModel.addRow(row);
             }
 
+
+            // 전체 화면 size 가져오기
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            // width, height 설정
+            int width = screenSize.width / 3;
+            int height = (screenSize.height-145) / 2;
+            int fullheight = screenSize.height-145;
+
+
             JButton searchButton = new JButton("매도/매수 기록 추가");
+            searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
+            searchButton.setPreferredSize(new Dimension( screenSize.width,34));
+
             searchButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -76,6 +89,10 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
             panel.add(label, BorderLayout.NORTH);
 
             JTable table = new JTable(tableModel);
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
             // 주식 클릭하면 Home2 화면으로 이동
             table.addMouseListener(new MouseAdapter() {

@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
@@ -86,6 +87,10 @@ class PanelAction4 { // 보유주식
 
             // 테이블 생성 및 패널에 추가
             JTable table = new JTable(tableModel);
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
             // 주식 클릭하면 StockInfo_new 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
