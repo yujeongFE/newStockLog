@@ -10,7 +10,9 @@ import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,6 +26,9 @@ import java.net.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 // 패널 3에 대한 동작을 처리하는 클래스
 public class Panel3Action { // 관심주식
@@ -54,6 +59,8 @@ public class Panel3Action { // 관심주식
             tableModel.addColumn("전일대비등락비");
             tableModel.addColumn("메모");
 
+
+
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화
             while (resultSet.next()) {
@@ -82,9 +89,18 @@ public class Panel3Action { // 관심주식
                 }
             } else {
             }
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            // width, height 설정
+            int width = screenSize.width / 3;
+            int height = (screenSize.height-145) / 2;
+            int fullheight = screenSize.height-145;
+
 
             // JButton 생성 및 패널에 추가
             JButton searchButton = new JButton("관심 주식 추가");
+            searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
+            searchButton.setPreferredSize(new Dimension( screenSize.width,34));
+
             searchButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -101,6 +117,21 @@ public class Panel3Action { // 관심주식
 
             // 테이블 생성 및 패널에 추가
             JTable table = new JTable(tableModel);
+
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            // Set the font size for cell content
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+
+            // Set a custom cell renderer to control cell font size
+            //table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+
+
+
+
+
+
 
             // 주식 클릭하면 Home2 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
