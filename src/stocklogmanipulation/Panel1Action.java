@@ -6,6 +6,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -157,6 +158,21 @@ class Panel1Action { // 종목 지수
 
             ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
+            plot.getRenderer().setSeriesPaint(0, new Color(0, 255, 0));
+            plot.setBackgroundPaint(Color.white);
+            plot.setDomainGridlinePaint(Color.lightGray);
+            plot.setRangeGridlinePaint(Color.lightGray);
+
+            // XYPlot의 렌더러 가져오기
+            XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+
+            // 차트 라인 색상 설정 (형광 초록색)
+            renderer.setSeriesPaint(0, new Color(0, 255, 0));
+
+            // 차트 라인 굵기 설정 (굵게)
+            renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+
+
 
             panel.removeAll();
             panel.add(chartPanel);

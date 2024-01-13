@@ -21,9 +21,9 @@ import java.util.List;
 
 public class Panel6Action {
 
-    public static void addFunctionality(JPanel panel) {
-        panel.setBackground(Color.GRAY);
-        panel.setBorder(BorderFactory.createEtchedBorder());
+    public static void addFunctionality(javax.swing.JPanel panel) {
+        panel.setBackground(java.awt.Color.GRAY);
+        panel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
     }
 
     private static long convertDateToTimestamp(String dateStr) throws Exception {
@@ -51,7 +51,7 @@ public class Panel6Action {
             String kosdaqResponse = executeApiRequest(kosdaqUrl);
 
             processJsonResponseAndDisplayInPanel(kospiResponse, panel, "KOSPI");
-            processJsonResponseAndDisplayInPanel(kosdaqResponse, panel, "KOSDAQ");
+            processJsonResponseAndDisplayInPanel(kosdaqResponse, panel, "   KOSDAQ");
 
             // Additional functionality to scrape and display Naver Finance data
             executeNaverFinanceScrapingAndDisplayInPanel(panel);
@@ -118,8 +118,8 @@ public class Panel6Action {
             List<String> selectedUpList = upList.subList(0, Math.min(upList.size(), 1));
 
             // Display the extracted elements in the panel
-            displayDataInPanel(panel, "개인, 외국인", selectedDownList, Color.BLUE);
-            displayDataInPanel(panel, "기관계", selectedUpList, Color.RED);
+            displayDataInPanel(panel, "  개인, 외국인 ", selectedDownList, Color.BLUE);
+            displayDataInPanel(panel, "기관계 ", selectedUpList, Color.RED);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,19 +160,17 @@ public class Panel6Action {
 
         if (difference < 0) {
             label = new JLabel(
-                    market + " " +
-                            "▼ " +
-                            chartPreviousClose + " " +
-                            regularMarketPrice + " " +
-                            String.format("%.2f", difference) + " "
+                    market + "  " +
+                            "▼  " +
+                            chartPreviousClose + "  " +
+                            String.format("%.2f", difference) + "  "
             );
         } else {
             label = new JLabel(
-                    market + " " +
-                            "▲ " +
-                            chartPreviousClose + " " +
-                            regularMarketPrice + " " +
-                            String.format("%.2f", difference) + " "
+                    market + "  " +
+                            "▲  " +
+                            chartPreviousClose + "  " +
+                            String.format("%.2f", difference) + "  "
             );
         }
 

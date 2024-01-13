@@ -26,10 +26,10 @@ public class H2_PanelAction5_1 extends JPanel {
         inputPanel.setLayout(new FlowLayout());
 
         JTextField categoryTextField = new JTextField(10);
-        JButton fetchButton = new JButton("Fetch News");
+        JButton fetchButton = new JButton("검색");
 
         // 첫 번째 레이블
-        JLabel firstLabel = new JLabel("카테고리 입력:");
+        JLabel firstLabel = new JLabel("카테고리:");
         inputPanel.add(firstLabel);
 
         // 한 줄 띄우기
