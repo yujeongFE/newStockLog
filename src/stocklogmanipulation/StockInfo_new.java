@@ -46,6 +46,15 @@ public class StockInfo_new {
             internalFrame1.setVisible(true);
             desktopPane.add(internalFrame1);
 
+            // innerframe1_1 생성, 추가
+            JInternalFrame internalFrame1_1 = new JInternalFrame("증시 지수", true, true, true, true);
+            JPanel internalPanel1_1 = createPanelWithBorder("증시 지수");
+            internalFrame1_1.getContentPane().add(internalPanel1_1);
+            internalFrame1_1.setSize(width, height);
+            internalFrame1_1.setLocation(0, 0);
+            internalFrame1_1.setVisible(true);
+            desktopPane.add(internalFrame1_1);
+
             // innerframe2 생성, 추가
             JInternalFrame internalFrame2 = new JInternalFrame("종목 차트", true, true, true, true);
             JPanel internalPanel2 = createPanelWithBorder("종목 차트");
@@ -111,7 +120,7 @@ public class StockInfo_new {
 
             // 패널에 기능 추가
             Panel1Action.addFunctionality(internalPanel1); // 패널 1에 기능 추가
-            // Panel11Action.addFunctionality(internalPanel1);
+            Panel11Action.addFunctionality(internalPanel1_1); // 패널 1_1
             SI_PanelAction2.addFunctionality(internalPanel2,stockName); // 패널 2에 기능 추가
             SI_PanelAction2_1.addFunctionality(internalPanel2_1,stockName); // 패널 2-1에 기능 추가
             PanelAction3.addFunctionality(internalPanel3, userId); // 관심 주식 표시

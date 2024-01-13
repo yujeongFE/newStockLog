@@ -44,6 +44,16 @@ public class Home_new {
             internalFrame1.setVisible(true);
             desktopPane.add(internalFrame1);
 
+            // innerframe1 생성, 추가
+            JInternalFrame internalFrame1_1 = new JInternalFrame("증시 지수", true, true, true, true);
+            JPanel internalPanel1_1 = createPanelWithBorder("증시 지수");
+            internalFrame1_1.getContentPane().add(internalPanel1_1);
+            internalFrame1_1.setSize(width, height);
+            internalFrame1_1.setLocation(0, 0);
+            internalFrame1_1.setVisible(true);
+            desktopPane.add(internalFrame1_1);
+
+
             // innerframe2 생성, 추가
             JInternalFrame internalFrame2 = new JInternalFrame("전체 수익률보기", true, true, true, true);
             JPanel internalPanel2 = createPanelWithBorder("수익률보기");
@@ -82,7 +92,7 @@ public class Home_new {
 
             // 패널에 기능 추가
             Panel1Action.addFunctionality(internalPanel1); // 패널 1에 기능 추가
-            // Panel11Action.addFunctionality(internalPanel2, "전체 수익률보기");
+            Panel11Action.addFunctionality(internalPanel1_1); // 패널 1_1
             Panel2Action.addFunctionality(internalPanel2, userId); // 패널 2에 기능 추가
             Panel3Action.addFunctionality(internalPanel3, userId); // 관심 주식 표시
             Panel4Action.addFunctionality(internalPanel4, userId); // 보유 주식 표시

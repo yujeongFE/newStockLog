@@ -90,11 +90,6 @@ public class Panel3Action { // 관심주식
             } else {
             }
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            // width, height 설정
-            int width = screenSize.width / 3;
-            int height = (screenSize.height-145) / 2;
-            int fullheight = screenSize.height-145;
-
 
             // JButton 생성 및 패널에 추가
             JButton searchButton = new JButton("관심 주식 추가");
@@ -121,17 +116,8 @@ public class Panel3Action { // 관심주식
             JTableHeader header = table.getTableHeader();
             header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
 
-            // Set the font size for cell content
+            // 폰트 사이즈
             table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-
-            // Set a custom cell renderer to control cell font size
-            //table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
-
-
-
-
-
-
 
             // 주식 클릭하면 Home2 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
@@ -372,7 +358,6 @@ public class Panel3Action { // 관심주식
                 if (!alreadyExists) {
                     try {
                         // Get the user input from the text field
-
                         String searchKeyword = text.getText();
 
                         // Encode the search term
@@ -383,14 +368,12 @@ public class Panel3Action { // 관심주식
                         String frdt = dateRange[0];
                         String todt = dateRange[1];
 
-                        System.out.println(encodedSearchTerm);
-
                         // Make the API request
                         StringBuffer stockPriceData = getStockPriceWithDifferentParam(encodedSearchTerm, frdt, todt);
 
                         if (stockPriceData.length() > 0) {
                             // Update the UI based on the response
-                            System.out.println("Stock Price Data:\n" + stockPriceData.toString());
+                            System.out.println("Stock Price Data:2\n" + stockPriceData.toString());
                         } else {
                             System.out.println("No stock price data available for the specified parameters.");
                         }
@@ -570,7 +553,7 @@ public class Panel3Action { // 관심주식
 
                         if (stockPriceData.length() > 0) {
                             // Update the UI based on the response
-                            System.out.println("Stock Price Data:\n" + stockPriceData.toString());
+                            System.out.println("1Stock Price Data:\n" + stockPriceData.toString());
 
                             // XML 파싱
                             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
