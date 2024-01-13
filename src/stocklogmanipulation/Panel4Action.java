@@ -22,8 +22,7 @@ import java.util.Calendar;
 
 // 패널 4에 대한 동작을 처리하는 클래스
 public class Panel4Action { // 보유주식
-    static Object[] row = new Object[7];
-    // 데이터를 담을 테이블 모델 생성
+    // static Object[] row = new Object[7]; // 데이터를 담을 테이블 모델 생성
     static double e_price;
     static double price;
     static DefaultTableModel tableModel = new DefaultTableModel();
@@ -52,6 +51,8 @@ public class Panel4Action { // 보유주식
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화
             while (resultSet.next()) {
+                Object[] row = new Object[7];
+
                 row[0] = resultSet.getObject(1);
                 row[1] = resultSet.getObject(2);
                 stockName = resultSet.getObject(2).toString(); // Object를 String으로 변환하여 stockName에 저장
@@ -61,69 +62,67 @@ public class Panel4Action { // 보유주식
                 row[4] = resultSet.getObject(4);
                 row[6] = resultSet.getObject(5);
                 // tableModel.addRow(row);
-            }
 
-            // 날짜 범위 설정
-            String[] dateRange = getLastBusinessDayRange();
-            String frdt = dateRange[0];
-            String todt = dateRange[1];
+                // 날짜 범위 설정
+                String[] dateRange = getLastBusinessDayRange();
+                String frdt = dateRange[0];
+                String todt = dateRange[1];
 
-            if(stockName != null){
-                // 종목명을 URL 인코딩하여 API 호출
-                StringBuffer stockPriceData = getStockPrice(URLEncoder.encode(stockName, "UTF-8"), frdt, todt);
+                if(stockName != null){
+                    // 종목명을 URL 인코딩하여 API 호출
+                    StringBuffer stockPriceData = getStockPrice(URLEncoder.encode(stockName, "UTF-8"), frdt, todt);
 
-                if (stockPriceData.length() > 0) {
-                    // 데이터 파싱 및 표로 정리하여 출력
-                    printStockPriceTable(stockPriceData);
-                } else {
-                    System.out.println("No stock price data available for the specified parameters.");
-                }
-            } else {
-            }
-
-            // JLabel 생성 및 패널에 추가
-            JLabel label = new JLabel("보유 주식", SwingConstants.CENTER); // SwingConstants.CENTER로 가운데 정렬
-            panel.add(label, BorderLayout.NORTH); // BorderLayout의 NORTH 위치에 추가
-
-            // 테이블 생성 및 패널에 추가
-            JTable table = new JTable(tableModel);
-            JTableHeader header = table.getTableHeader();
-            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
-
-            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-
-            // 주식 클릭하면 Home2 화면으로 이동
-            table.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 1) { // 클릭 확인
-                        JTable target = (JTable) e.getSource();
-                        int row = target.getSelectedRow();
-
-                        // 여기서 선택된 행의 데이터를 얻을 수 있어요.
-                        String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
-                        // System.out.println(stockName);
-                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                    if (stockPriceData.length() > 0) {
+                        // 데이터 파싱 및 표로 정리하여 출력
+                        printStockPriceTable(stockPriceData, row);
+                    } else {
+                        System.out.println("No stock price data available for the specified parameters.");
                     }
+                } else {
                 }
-            });
 
-            // 테이블 크기 조정
-            table.setPreferredScrollableViewportSize(table.getPreferredSize());
+                // JLabel 생성 및 패널에 추가
+                JLabel label = new JLabel("보유 주식", SwingConstants.CENTER); // SwingConstants.CENTER로 가운데 정렬
+                panel.add(label, BorderLayout.NORTH); // BorderLayout의 NORTH 위치에 추가
 
-            // JScrollPane으로 테이블을 감싸기
-            JScrollPane scrollPane = new JScrollPane(table);
+                // 테이블 생성 및 패널에 추가
+                JTable table = new JTable(tableModel);
+                JTableHeader header = table.getTableHeader();
+                header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
 
-            // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
-            Dimension panelSize = panel.getPreferredSize();
-            int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
+                table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
-            // System.out.println(newScrollPaneHeight);
+                // 주식 클릭하면 Home2 화면으로 이동
+                table.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (e.getClickCount() == 1) { // 클릭 확인
+                            JTable target = (JTable) e.getSource();
+                            int row = target.getSelectedRow();
 
-            scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
+                            // 여기서 선택된 행의 데이터를 얻을 수 있어요.
+                            String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
+                            // System.out.println(stockName);
+                            new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                        }
+                    }
+                });
 
-            // 패널에 JScrollPane 추가
-            panel.add(scrollPane, BorderLayout.CENTER);
+                // 테이블 크기 조정
+                table.setPreferredScrollableViewportSize(table.getPreferredSize());
+
+                // JScrollPane으로 테이블을 감싸기
+                JScrollPane scrollPane = new JScrollPane(table);
+
+                // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
+                Dimension panelSize = panel.getPreferredSize();
+                int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
+
+                scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
+
+                // 패널에 JScrollPane 추가
+                panel.add(scrollPane, BorderLayout.CENTER);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -192,7 +191,8 @@ public class Panel4Action { // 보유주식
         return strBuffer;
     }
 
-    private static void printStockPriceTable(StringBuffer xmlData) throws Exception {
+    private static void printStockPriceTable(StringBuffer xmlData, Object[] row) throws Exception {
+
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         ByteArrayInputStream input = new ByteArrayInputStream(xmlData.toString().getBytes("UTF-8"));

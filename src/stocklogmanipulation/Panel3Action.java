@@ -145,8 +145,6 @@ public class Panel3Action { // 관심주식
             Dimension panelSize = panel.getPreferredSize();
             int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
 
-            System.out.println(newScrollPaneHeight);
-
             scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
 
             // 패널에 JScrollPane 추가
