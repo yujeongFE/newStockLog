@@ -10,20 +10,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 // 패널 4에 대한 동작을 처리하는 클래스
-class Panel4Action { // 보유주식
+public class Panel4Action { // 보유주식
     static Object[] row = new Object[7];
     // 데이터를 담을 테이블 모델 생성
     static double e_price;
@@ -101,7 +98,7 @@ class Panel4Action { // 보유주식
                         // 여기서 선택된 행의 데이터를 얻을 수 있어요.
                         String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
                         // System.out.println(stockName);
-                        new Home2(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
                     }
                 }
             });

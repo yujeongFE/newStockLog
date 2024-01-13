@@ -30,7 +30,7 @@ class Panel1Action { // 종목 지수
         try {
             // 시작 및 종료 날짜를 Unix 타임스탬프로 변환
             long 시작날짜 = convertDateToTimestamp("20240101");
-            long 종료날짜 = convertDateToTimestamp("20240109");
+            long 종료날짜 = convertDateToTimestamp("20240111");
 
             // 업데이트된 날짜 범위로 Yahoo Finance API URL 작성
             String apiUrl = "https://query1.finance.yahoo.com/v8/finance/chart/^KS11?period1=" + 시작날짜 +

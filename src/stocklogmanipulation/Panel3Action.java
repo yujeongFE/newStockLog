@@ -26,14 +26,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 // 패널 3에 대한 동작을 처리하는 클래스
-class Panel3Action { // 관심주식
+public class Panel3Action { // 관심주식
     static Object[] row = new Object[7];
     // 데이터를 담을 테이블 모델 생성
     static DefaultTableModel tableModel = new DefaultTableModel();
 
-
-    // 사용자가 입력한 관심 주식 데이터를 저장할 정적 변수(H2_PanelAction5.java에서 필요)
-    static String userInterestStock;
 
 
     public static void addFunctionality(JPanel panel, String userId) {
@@ -49,13 +46,13 @@ class Panel3Action { // 관심주식
             ResultSet resultSet = statement.executeQuery(query);
 
             // 원하는 컬럼 순서와 이름을 추가
-            tableModel.addColumn("종목명"); //
-            tableModel.addColumn("종목코드"); //
+            tableModel.addColumn("종목명");
+            tableModel.addColumn("종목코드");
             tableModel.addColumn("현재주가");
-            tableModel.addColumn("시장 구분"); //
+            tableModel.addColumn("시장 구분");
             tableModel.addColumn("전일대비등락");
             tableModel.addColumn("전일대비등락비");
-            tableModel.addColumn("메모"); //
+            tableModel.addColumn("메모");
 
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화
@@ -116,7 +113,7 @@ class Panel3Action { // 관심주식
                         // 여기서 선택된 행의 데이터를 얻을 수 있어요.
                         String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
                         // System.out.println(stockName);
-                        new Home2(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
                     }
                 }
             });
@@ -245,9 +242,6 @@ class Panel3Action { // 관심주식
 
         NodeList itemList = doc.getElementsByTagName("item");
 
-        // 사용자가 입력한 관심 주식 데이터를 저장 (H2_PanelAction5.java에서 필요)
-        Panel3Action.userInterestStock = userInterestStock;
-
         // 출력 행 구성
         if (itemList.getLength() > 0) {
             Node itemNode = itemList.item(0);
@@ -286,7 +280,6 @@ class Panel3Action { // 관심주식
         inputPanel.add(searchButton);
 
         panel.add(BorderLayout.NORTH, inputPanel);
-        System.out.println(inputPanel);
 
         interestFrame.getContentPane().add(panel);
         interestFrame.setSize(400, 400);
@@ -399,7 +392,6 @@ class Panel3Action { // 관심주식
 
                     // 검색 버튼 클릭 시
                     if (stockPriceData.length() > 0) {
-                        System.out.println(stockPriceData.toString());
 
                         // XML 파싱
                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -414,7 +406,6 @@ class Panel3Action { // 관심주식
                             Element item = (Element) itemList.item(i);
                             String itemName = item.getElementsByTagName("itmsNm").item(0).getTextContent();
                             listModel.addElement(itemName);
-                            System.out.println("Added to list: " + itemName);
                         }
                         DefaultListModel<String> newModel = new DefaultListModel<>();
                         for (int i = 0; i < listModel.size(); i++) {
@@ -427,12 +418,10 @@ class Panel3Action { // 관심주식
                         searchList.setVisible(true);
                         scrollPane.setVisible(true);
                     } else {
-                        System.out.println("No stock price data available for the specified parameters.");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 } finally {
-                    System.out.println("Search button clicked!");
                 }
             }
         });
@@ -485,8 +474,6 @@ class Panel3Action { // 관심주식
 
                         if (stockPriceData.length() > 0) {
                             // 응답을 기반으로 UI 업데이트
-                            System.out.println("주식 가격 데이터:\n" + stockPriceData.toString());
-
                             // XML 파싱
                             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                             DocumentBuilder builder = factory.newDocumentBuilder();
