@@ -27,8 +27,8 @@ import java.util.Calendar;
 class PanelAction3 { // 관심주식
     static Object[] row = new Object[7];
     // 데이터를 담을 테이블 모델 생성
-    static DefaultTableModel tableModel = new DefaultTableModel();
-
+    static String[] columnNames = {"종목명", "종목코드", "현재주가", "시장 구분", "전일대비등락", "전일대비등락비", "메모"};
+    static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
     public static void addFunctionality(JPanel panel, String userId) {
         // 데이터베이스 연결
         DBconnection dbConnector = new DBconnection();
@@ -41,14 +41,7 @@ class PanelAction3 { // 관심주식
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            // 원하는 컬럼 순서와 이름을 추가
-            tableModel.addColumn("종목명"); //
-            tableModel.addColumn("종목코드"); //
-            tableModel.addColumn("현재주가");
-            tableModel.addColumn("시장 구분"); //
-            tableModel.addColumn("전일대비등락");
-            tableModel.addColumn("전일대비등락비");
-            tableModel.addColumn("메모"); //
+            tableModel.setRowCount(0);
 
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화
@@ -58,7 +51,7 @@ class PanelAction3 { // 관심주식
                 row[1] = resultSet.getObject(2);
                 row[3] = resultSet.getObject(3);
                 row[6] = resultSet.getObject(4);
-                // tableModel.addRow(row);
+                //tableModel.addRow(row);
             }
 
             // 날짜 범위 설정
@@ -90,7 +83,7 @@ class PanelAction3 { // 관심주식
 
             // JButton 생성 및 패널에 추가
             JButton searchButton = new JButton("관심 주식 추가");
-            searchButton.setFont(new Font("Arial", Font.PLAIN, 17));
+            searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
             searchButton.setPreferredSize(new Dimension( screenSize.width,34));
             searchButton.addActionListener(new ActionListener() {
                 @Override
