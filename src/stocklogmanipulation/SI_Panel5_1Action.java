@@ -10,16 +10,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class H2_PanelAction5_1 extends JPanel {
+public class SI_Panel5_1Action extends JPanel {
 
     private JTextArea responseTextArea;
 
-    private H2_PanelAction5_1() {
+    private SI_Panel5_1Action() {
         setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel();
@@ -148,7 +147,7 @@ public class H2_PanelAction5_1 extends JPanel {
 
     public static void addFunctionality(JPanel panel) {
         SwingUtilities.invokeLater(() -> {
-            H2_PanelAction5_1 h2PanelAction5_1 = new H2_PanelAction5_1();
+            SI_Panel5_1Action h2PanelAction5_1 = new SI_Panel5_1Action();
             panel.add(h2PanelAction5_1);
         });
     }

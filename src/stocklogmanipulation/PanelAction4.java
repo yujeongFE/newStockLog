@@ -11,123 +11,81 @@ import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
-import java.math.BigDecimal;
-import java.net.*;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Scanner;
 
-// 패널 4에 대한 동작을 처리하는 클래스
-public class PanelAction4 { // 보유주식
-    //static Object[] row = new Object[7]; // 데이터를 담을 테이블 모델 생성
-    static double e_price;
-    static double price;
-    static String[] columnNames = {"종목명", "종목코드", "현재주가", "시장 구분", "전일대비등락", "전일대비등락비", "메모"};
+// 패널 6에 대한 동작을 처리하는 클래스
+class PanelAction4 { // 특정 주식에 대한 매도, 매수 리스트
+    static String[] columnNames = {"기준일자", "종목명", "종목단축코드", "시장구분", "종가", "전일대비등락", "전일대비등락비", "시가", "고가"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
-
-    public static void addFunctionality(JPanel panel, String userId) {
-        // 데이터베이스 연결
-        DBconnection dbConnector = new DBconnection();
-        Connection connection = dbConnector.getConnection();
-
-        String id = userId;
-        // SQL 쿼리 실행
-        String query = "SELECT h.COMPANY, s.NAME, h.E_PRICE, h.QTY, h.DATE FROM stock s, have h WHERE s.CODE = h.CODE AND U_ID = '" + id + "'";
+    public static void addFunctionality(JPanel panel, String stockName) {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            Object[] row = new Object[9];
 
-            tableModel.setRowCount(0);
+            // 날짜 범위 설정
+            String[] dateRange = getLastBusinessDayRange();
+            String frdt = dateRange[0];
+            String todt = dateRange[1];
 
-            // 결과셋의 데이터를 테이블 모델에 추가
-            String stockName = null; // 변수를 루프 바깥에 선언하고 초기화
-            while (resultSet.next()) {
-                Object[] row = new Object[7];
+            if (stockName != null) {
+                // 종목명을 URL 인코딩하여 API 호출
+                StringBuffer stockPriceData = getStockPrice(URLEncoder.encode(stockName, "UTF-8"), frdt, todt);
 
-                row[0] = resultSet.getObject(1);
-                row[1] = resultSet.getObject(2);
-                stockName = resultSet.getObject(2).toString(); // Object를 String으로 변환하여 stockName에 저장
-                row[3] = resultSet.getObject(3);
-                BigDecimal ePriceAsBigDecimal = (BigDecimal) resultSet.getObject(3);
-                e_price = ePriceAsBigDecimal.doubleValue(); // BigDecimal 값을 double로 변환하여 e_price에 저장
-                row[4] = resultSet.getObject(4);
-                row[6] = resultSet.getObject(5);
-                // tableModel.addRow(row);
-
-                // 날짜 범위 설정
-                String[] dateRange = getLastBusinessDayRange();
-                String frdt = dateRange[0];
-                String todt = dateRange[1];
-
-                if(stockName != null){
-                    // 종목명을 URL 인코딩하여 API 호출
-                    StringBuffer stockPriceData = getStockPrice(URLEncoder.encode(stockName, "UTF-8"), frdt, todt);
-
-                    if (stockPriceData.length() > 0) {
-                        // 데이터 파싱 및 표로 정리하여 출력
-                        printStockPriceTable(stockPriceData, row);
-                    } else {
-                        System.out.println("No stock price data available for the specified parameters.");
-                    }
+                if (stockPriceData.length() > 0) {
+                    // 데이터 파싱 및 표로 정리하여 출력
+                    printStockPriceTable(stockPriceData, row);
                 } else {
+                    System.out.println("No stock price data available for the specified parameters.");
                 }
-
-                // JLabel 생성 및 패널에 추가
-                JLabel label = new JLabel("보유 주식", SwingConstants.CENTER); // SwingConstants.CENTER로 가운데 정렬
-                panel.add(label, BorderLayout.NORTH); // BorderLayout의 NORTH 위치에 추가
-
-                // 테이블 생성 및 패널에 추가
-                JTable table = new JTable(tableModel);
-                JTableHeader header = table.getTableHeader();
-                header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
-
-                table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-
-                // 주식 클릭하면 Home2 화면으로 이동
-                table.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (e.getClickCount() == 1) { // 클릭 확인
-                            JTable target = (JTable) e.getSource();
-                            int row = target.getSelectedRow();
-
-                            // 여기서 선택된 행의 데이터를 얻을 수 있어요.
-                            String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
-                            // System.out.println(stockName);
-                            new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
-                        }
-                    }
-                });
-
-                // 테이블 크기 조정
-                table.setPreferredScrollableViewportSize(table.getPreferredSize());
-
-                // JScrollPane으로 테이블을 감싸기
-                JScrollPane scrollPane = new JScrollPane(table);
-
-                // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
-                Dimension panelSize = panel.getPreferredSize();
-                int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
-
-                scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
-
-                // 패널에 JScrollPane 추가
-                panel.add(scrollPane, BorderLayout.CENTER);
+            } else {
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            // 연결 닫기
-            dbConnector.closeConnection();
+            // 예외 처리
+            e.printStackTrace();
         }
+
+        // JLabel 생성 및 패널에 추가
+        JLabel label = new JLabel("최근 주가 차트", SwingConstants.CENTER);
+        panel.add(label, BorderLayout.NORTH);
+
+        JTable table = new JTable(tableModel);
+
+        JTableHeader header = table.getTableHeader();
+        header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+        // 폰트 사이즈
+        table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+
+        // 테이블 크기 조정
+        table.setPreferredScrollableViewportSize(table.getPreferredSize());
+
+        // JScrollPane으로 테이블을 감싸기
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
+        Dimension panelSize = panel.getPreferredSize();
+        int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
+
+        scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
+
+        // 패널에 JScrollPane 추가
+        panel.add(scrollPane, BorderLayout.CENTER);
     }
 
     private static String[] getLastBusinessDayRange() {
@@ -169,11 +127,19 @@ public class PanelAction4 { // 보유주식
             con.setRequestMethod("GET");
 
             // API 응답 읽기
-            in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+            int responseCode = con.getResponseCode();
 
-            String line;
-            while ((line = in.readLine()) != null) {
-                strBuffer.append(line);
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+
+                String line;
+                while ((line = in.readLine()) != null) {
+                    strBuffer.append(line);
+                }
+            } else {
+                System.out.println("HTTP request failed with response code: " + responseCode);
+                // 사용자에게 502 에러가 발생했음을 알리는 메시지
+                strBuffer.append("502 에러가 발생했습니다. 프로그램을 다시 실행하세요.");
             }
 
         } finally {
@@ -186,7 +152,6 @@ public class PanelAction4 { // 보유주식
     }
 
     private static void printStockPriceTable(StringBuffer xmlData, Object[] row) throws Exception {
-
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         ByteArrayInputStream input = new ByteArrayInputStream(xmlData.toString().getBytes("UTF-8"));
@@ -196,24 +161,27 @@ public class PanelAction4 { // 보유주식
         NodeList itemList = doc.getElementsByTagName("item");
 
         // 출력 행 구성
+        for (int i = 0; i < itemList.getLength(); i++) {
+            Node itemNode = itemList.item(i);
+            if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element itemElement = (Element) itemNode;
 
-        // 현재 주가, 예상수익률 계산
-        Node itemNode = itemList.item(0);
-        if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
-            Element itemElement = (Element) itemNode;
+                // 각 행 추가
+                row[0] = getValue("basDt", itemElement);
+                row[1] = getValue("itmsNm", itemElement);
+                row[2] = getValue("srtnCd", itemElement);
+                row[3] = getValue("mrktCtg", itemElement);
+                row[4] = getValue("clpr", itemElement);
+                row[5] = getValue("vs", itemElement);
+                row[6] = getValue("fltRt", itemElement);
+                row[7] = getValue("mkp", itemElement);
+                row[8] = getValue("hipr", itemElement);
+                tableModel.addRow(row);
 
-            row[2] = getValue("clpr", itemElement); // 현재 주가
-            String stringValue = (String) row[2];
-            price = Double.parseDouble(stringValue);
-
-            // 예상수익률 : (현재주가 - E_PRICE) / E_PRICE * 100
-            double result = (price - e_price) / e_price * 100;
-            String r = String.format("%.2f", result);
-            row[5] = r;
-            tableModel.addRow(row);
+            }
         }
-
     }
+
     private static String getValue(String tag, Element element) {
         NodeList nodeList = element.getElementsByTagName(tag).item(0).getChildNodes();
         Node node = nodeList.item(0);
