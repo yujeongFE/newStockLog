@@ -85,7 +85,7 @@ public class Panel3Action extends Thread {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         DefaultTableModel DefaultTableModel = new DefaultTableModel();
-                        InterestStockFrame(tableModel, row);
+                        InterestStockFrame(tableModel, row, userId);
                     }
                 });
                 panel.add(searchButton, BorderLayout.SOUTH);
@@ -280,7 +280,7 @@ public class Panel3Action extends Thread {
         return node.getNodeValue();
     }
 
-    private static void InterestStockFrame(DefaultTableModel tableModel, Object[] row) {
+    private static void InterestStockFrame(DefaultTableModel tableModel, Object[] row, String userId) {
         JFrame interestFrame = new JFrame("관심 주식 추가");
         interestFrame.setLocation(200, 400);
         JPanel panel = new JPanel();
@@ -452,13 +452,63 @@ public class Panel3Action extends Thread {
                             if (itemList.getLength() > 0) {
                                 Element item = (Element) itemList.item(0);
                                 row[0] = item.getElementsByTagName("itmsNm").item(0).getTextContent();
+                                String stockname = (String) row[0];
                                 row[1] = item.getElementsByTagName("srtnCd").item(0).getTextContent();
+                                String stockcode = (String) row[1];
                                 row[2] = item.getElementsByTagName("clpr").item(0).getTextContent();
                                 row[3] = item.getElementsByTagName("mrktCtg").item(0).getTextContent();
+                                String market = (String) row[3];
                                 row[4] = item.getElementsByTagName("vs").item(0).getTextContent();
                                 row[5] = item.getElementsByTagName("fltRt").item(0).getTextContent();
 
                                 tableModel.addRow(row);
+
+                                // stock table에 넣기
+                                DBconnection dbConnector = new DBconnection();
+                                Connection connection = dbConnector.getConnection();
+
+                                String query = "SELECT * FROM stock WHERE NAME = '" + stockname + "'";
+                                try {
+                                    Statement selectStatement = connection.createStatement();
+                                    ResultSet resultSet = selectStatement.executeQuery(query);
+
+                                    // 결과가 비어 있는지 확인
+                                    if (!resultSet.next()) {
+                                        // 여기에 쿼리 결과가 비어있을 때 실행할 INSERT 쿼리를 작성하고 실행합니다.
+                                        String insertQuery = "INSERT INTO stock (CODE, NAME) VALUES ('" + stockcode + "', '" + stockname + "')";
+                                        Statement insertStatement = connection.createStatement();
+                                        insertStatement.executeUpdate(insertQuery);
+                                    }
+                                } catch (SQLException a) {
+                                    a.printStackTrace();
+                                } finally {
+                                    // 연결 닫기 등의 마무리 작업
+                                    dbConnector.closeConnection();
+                                }
+
+                                // stock table에 넣기
+                                DBconnection dbConnector1 = new DBconnection();
+                                Connection connection1 = dbConnector1.getConnection();
+
+                                String query1 = "SELECT * FROM interest WHERE U_ID = '" + userId + "' AND CODE = '" + stockcode + "'";
+                                try {
+                                    Statement selectStatement = connection1.createStatement();
+                                    ResultSet resultSet = selectStatement.executeQuery(query1);
+
+                                    // 결과가 비어 있는지 확인
+                                    if (!resultSet.next()) {
+                                        // 여기에 쿼리 결과가 비어있을 때 실행할 INSERT 쿼리를 작성하고 실행합니다.
+                                        String insertQuery = "INSERT INTO interest (U_ID, CODE, CATEGORY) VALUES ('" + userId + "', '" + stockcode + "', '" + market + "')";
+                                        Statement insertStatement = connection1.createStatement();
+                                        insertStatement.executeUpdate(insertQuery);
+                                    }
+                                } catch (SQLException a) {
+                                    a.printStackTrace();
+                                } finally {
+                                    // 연결 닫기 등의 마무리 작업
+                                    dbConnector1.closeConnection();
+                                }
+                                // stock
                             }
                         } else {
                             System.out.println("No stock price data available for the specified parameters.");
