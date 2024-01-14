@@ -19,7 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
+import javvosa.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.*;
@@ -406,12 +406,7 @@ public class Panel3Action extends Thread {
         searchList.addListSelectionListener(e -> {
             // 선택한 항목의 인덱스 가져오기
             int[] selectedIndices = searchList.getSelectedIndices();
-
-            // 선택한 항목이 없으면 테이블 비우기
-            if (selectedIndices.length == 0) {
-                tableModel.setRowCount(0);
-                return;
-            }
+            
 
             // 기존 테이블 데이터 유지
             int rowCount = tableModel.getRowCount();
