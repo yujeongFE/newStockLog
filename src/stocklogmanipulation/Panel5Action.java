@@ -36,7 +36,6 @@ public class Panel5Action { // 주식 매매 기록
     static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "매매비용(세금, 수수료)", "메모"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
-    // Declare searchList as a class field
     private static JList<String> searchList;
     static String id;
     public static void addFunctionality(JPanel panel, String userId) {
