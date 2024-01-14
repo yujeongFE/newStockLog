@@ -126,7 +126,6 @@ public class Panel3Action extends Thread {
                         JTable target = (JTable) e.getSource();
                         int row = target.getSelectedRow();
 
-                        // 여기서 선택된 행의 데이터를 얻을 수 있어요.
                         String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
                         // System.out.println(stockName);
                         new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
@@ -188,7 +187,6 @@ public class Panel3Action extends Thread {
         StringBuffer strBuffer = new StringBuffer();
 
         try {
-            // API 요청 URL을 동적으로 생성
             String urlStr = "https://api.odcloud.kr/api/GetStockSecuritiesInfoService/v1/getStockPriceInfo?";
             urlStr += "serviceKey=" + "1%2FWP%2BVc3M5kGU2bikqOuBl9hAtMQ7OeqB24EL0llGF9zC75kdgM1jbsTy90LiI9hmDwU7jeFjW8P%2B1VPFtc%2BDg%3D%3D";  // API 키를 적절하게 설정
             urlStr += "&beginBasDt=" + frdt;
@@ -327,8 +325,7 @@ public class Panel3Action extends Thread {
 
         JList<String> searchList = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(searchList);
-        panel.add(scrollPane, BorderLayout.CENTER); // Changed to CENTER
-        searchList.setVisible(true);
+        panel.add(scrollPane, BorderLayout.CENTER);
         scrollPane.setVisible(true);
         text.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -355,8 +352,6 @@ public class Panel3Action extends Thread {
                         filteredModel.addElement(item);
                     }
                 }
-                searchList.setModel(filteredModel); // Set the model for searchList
-                searchList.setVisible(!searchText.isEmpty());
                 scrollPane.setVisible(!searchText.isEmpty());
             }
         });
@@ -367,7 +362,6 @@ public class Panel3Action extends Thread {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // Get the user input from the text field
                     String searchKeyword = text.getText();
 
                     String encodedSearchTerm = URLEncoder.encode(searchKeyword, "UTF-8");
@@ -389,8 +383,9 @@ public class Panel3Action extends Thread {
                         NodeList itemList = document.getElementsByTagName("item");
                         for (int i = 0; i < itemList.getLength(); i++) {
                             Element item = (Element) itemList.item(i);
+                            String scode = item.getElementsByTagName("srtnCd").item(0).getTextContent();
                             String itemName = item.getElementsByTagName("itmsNm").item(0).getTextContent();
-                            listModel.addElement(itemName);
+                            listModel.addElement(itemName + " (" + scode + ")");
                         }
 
                         if (listModel.isEmpty()) {
