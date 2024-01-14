@@ -94,7 +94,7 @@ public class Home_new {
 
             // 패널에 기능 추가
             Panel1Action.addFunctionality(internalPanel1); // 패널 1에 기능 추가
-            Panel11Action.addFunctionality(internalPanel1_1); // 패널 1_1
+            Panel1_1Action.addFunctionality(internalPanel1_1); // 패널 1_1
             Panel2Action.addFunctionality(internalPanel2, userId); // 패널 2에 기능 추가
             Panel3Action.addFunctionality(internalPanel3, userId); // 관심 주식 표시
             Panel4Action.addFunctionality(internalPanel4, userId); // 보유 주식 표시
