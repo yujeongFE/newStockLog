@@ -247,6 +247,13 @@ public class Panel3Action extends Thread {
                 while ((line = in.readLine()) != null) {
                     strBuffer.append(line);
                 }
+
+                // 만약 검색 결과가 0인 경우에 대한 처리
+                if (strBuffer.length() == 0) {
+                    // 팝업을 통해 사용자에게 알림
+                    JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.");
+                }
+
             } else {
                 System.out.println("HTTP request failed with response code: " + responseCode);
                 // 사용자에게 502 에러가 발생했음을 알리는 메시지
@@ -372,7 +379,6 @@ public class Panel3Action extends Thread {
                     StringBuffer stockPriceData = getStockPriceWithDifferentParam(encodedSearchTerm, frdt, todt);
 
                     if (stockPriceData.length() > 0) {
-
                         // XML 파싱
                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -386,6 +392,13 @@ public class Panel3Action extends Thread {
                             String itemName = item.getElementsByTagName("itmsNm").item(0).getTextContent();
                             listModel.addElement(itemName);
                         }
+
+                        if (listModel.isEmpty()) {
+                            // 검색 결과가 없을 때 알림
+                            JOptionPane.showMessageDialog(null, "종목명 검색과 일치하는 결과가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                        // 이후 코드는 변경하지 않음
                         DefaultListModel<String> newModel = new DefaultListModel<>();
                         for (int i = 0; i < listModel.size(); i++) {
                             newModel.addElement(listModel.getElementAt(i));
@@ -396,10 +409,13 @@ public class Panel3Action extends Thread {
                         searchList.setVisible(true);
                         scrollPane.setVisible(true);
                     } else {
+                        // 수정된 부분: 검색 결과가 없을 때 알림
+                        JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                } finally {
+                    // 수정된 부분: 검색 중 오류 발생 시 알림
+                    JOptionPane.showMessageDialog(null, "검색 중 오류가 발생했습니다.", "에러", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
