@@ -1,45 +1,17 @@
 package stocklogmanipulation;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.Border;
 
 // 패널 5
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.io.IOException;
 
 // 패널 5-1
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URLEncoder;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.BorderFactory;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.table.DefaultTableModel;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 // 패널 1에 대한 동작을 처리하는 클래스
 
@@ -108,9 +80,9 @@ public class Home2 {
 
 
         // 패널에 기능 추가
-        PanelAction1.addFunctionality(topLeftPanel); // 패널 1에 기능 추가
+        SI_Panel1Action.addFunctionality(topLeftPanel); // 패널 1에 기능 추가
         // H2_PanelAction2.addFunctionality(topRightPanel1,stockName); // 패널 2에 기능 추가
-        PanelAction1.addFunctionality(topLeftPanel); // 패널 1에 기능 추가
+        SI_Panel1Action.addFunctionality(topLeftPanel); // 패널 1에 기능 추가
         PanelAction1_1.addFunctionality(topLeftPanel2); // 패널 1에 기능 추가
         // H2_PanelAction2_1.addFunctionality(topRightPanel2,stockName); // 패널 2-1에 기능 추가
         PanelAction3.addFunctionality(bottomLeftPanel, userId); // 관심 주식 표시
