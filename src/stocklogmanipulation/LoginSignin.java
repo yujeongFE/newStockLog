@@ -332,7 +332,6 @@ public class LoginSignin {
             }
         });
 
-
         loginFrame.setVisible(true);
     }
 }

@@ -22,10 +22,11 @@ import java.util.Calendar;
 
 // 패널 4에 대한 동작을 처리하는 클래스
 public class PanelAction4 { // 보유주식
-    // static Object[] row = new Object[7]; // 데이터를 담을 테이블 모델 생성
+    //static Object[] row = new Object[7]; // 데이터를 담을 테이블 모델 생성
     static double e_price;
     static double price;
-    static DefaultTableModel tableModel = new DefaultTableModel();
+    static String[] columnNames = {"종목명", "종목코드", "현재주가", "시장 구분", "전일대비등락", "전일대비등락비", "메모"};
+    static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
     public static void addFunctionality(JPanel panel, String userId) {
         // 데이터베이스 연결
@@ -39,14 +40,7 @@ public class PanelAction4 { // 보유주식
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            // 원하는 컬럼 순서와 이름을 추가
-            tableModel.addColumn("증권사");
-            tableModel.addColumn("종목명");
-            tableModel.addColumn("현재주가"); //
-            tableModel.addColumn("평균매수단가");
-            tableModel.addColumn("수량");
-            tableModel.addColumn("예상수익률"); //
-            tableModel.addColumn("매매시작일");
+            tableModel.setRowCount(0);
 
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화

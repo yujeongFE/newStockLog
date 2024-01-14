@@ -33,7 +33,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class Panel5Action { // 주식 매매 기록
     static Object[] row = new Object[8];
-    static DefaultTableModel tableModel = new DefaultTableModel();
+    static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "매매비용(세금, 수수료)", "메모"};
+    static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
     // Declare searchList as a class field
     private static JList<String> searchList;
@@ -48,14 +49,6 @@ public class Panel5Action { // 주식 매매 기록
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            tableModel.addColumn("종목명");
-            tableModel.addColumn("증권사");
-            tableModel.addColumn("매도/매수");
-            tableModel.addColumn("날짜");
-            tableModel.addColumn("주식 단가");
-            tableModel.addColumn("수량");
-            tableModel.addColumn("매매비용(세금, 수수료)");
-            tableModel.addColumn("메모");
 
             while (resultSet.next()) {
                 row[0] = resultSet.getObject(1);
@@ -73,7 +66,7 @@ public class Panel5Action { // 주식 매매 기록
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
             JButton searchButton = new JButton("매도/매수 기록 추가");
-            searchButton.setFont(new Font("굴림", Font.PLAIN, 17));
+            searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
             searchButton.setPreferredSize(new Dimension( screenSize.width,34));
 
             searchButton.addActionListener(new ActionListener() {
@@ -91,7 +84,7 @@ public class Panel5Action { // 주식 매매 기록
             JTableHeader header = table.getTableHeader();
             header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
 
-            table.setFont(new Font("굴림", Font.PLAIN, 15));
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
             // 주식 클릭하면 Stock_Info 화면으로 이동
             table.addMouseListener(new MouseAdapter() {

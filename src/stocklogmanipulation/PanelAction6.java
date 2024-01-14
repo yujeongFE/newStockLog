@@ -31,11 +31,14 @@ import java.util.Calendar;
 // 패널 6에 대한 동작을 처리하는 클래스
 class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
     static Object[] row = new Object[8];
-    static DefaultTableModel tableModel = new DefaultTableModel();
+    static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "매매비용(세금, 수수료)", "메모"};
+    static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
     public static void addFunctionality(JPanel panel, String userId, String stockName) {
         DBconnection dbConnector = new DBconnection();
         Connection connection = dbConnector.getConnection();
+
+        tableModel.setRowCount(0);
 
         String id = userId;
         String query = "SELECT s.NAME, l.COMPANY, l.BUYORSELL, l.DATE, l.PRICE, l.QTY, l.RRATIO, l.MEMO FROM stock s, log l WHERE s.CODE = l.CODE AND U_ID = '" + id + "' AND s.Name = '" + stockName + "'";
@@ -43,14 +46,6 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            tableModel.addColumn("종목명");
-            tableModel.addColumn("증권사");
-            tableModel.addColumn("매도/매수");
-            tableModel.addColumn("날짜");
-            tableModel.addColumn("주식 단가");
-            tableModel.addColumn("수량");
-            tableModel.addColumn("수익률");
-            tableModel.addColumn("메모");
 
             while (resultSet.next()) {
                 row[0] = resultSet.getObject(1);

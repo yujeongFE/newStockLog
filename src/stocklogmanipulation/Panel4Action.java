@@ -25,8 +25,8 @@ public class Panel4Action { // 보유주식
     // static Object[] row = new Object[7]; // 데이터를 담을 테이블 모델 생성
     static double e_price;
     static double price;
-    static DefaultTableModel tableModel = new DefaultTableModel();
-
+    static String[] columnNames = {"증권사", "종목명", "현재주가", "평균매수단가", "수량", "예상수익률", "매매시작일"};
+    static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
     public static void addFunctionality(JPanel panel, String userId) {
         // 데이터베이스 연결
         DBconnection dbConnector = new DBconnection();
@@ -38,15 +38,6 @@ public class Panel4Action { // 보유주식
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-
-            // 원하는 컬럼 순서와 이름을 추가
-            tableModel.addColumn("증권사");
-            tableModel.addColumn("종목명");
-            tableModel.addColumn("현재주가"); //
-            tableModel.addColumn("평균매수단가");
-            tableModel.addColumn("수량");
-            tableModel.addColumn("예상수익률"); //
-            tableModel.addColumn("매매시작일");
 
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화

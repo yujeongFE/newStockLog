@@ -14,7 +14,7 @@ public class StockInfo_new {
         this.stockName = stockName;
 
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("1주식 매매 관리 시스템1");
+            JFrame frame = new JFrame("주식 매매 관리 시스템");
 
             JDesktopPane desktopPane = new JDesktopPane();
 
@@ -45,15 +45,6 @@ public class StockInfo_new {
             internalFrame1.setLocation(desktopPane.getAllFrames().length * width, desktopPane.getAllFrames().length * height);
             internalFrame1.setVisible(true);
             desktopPane.add(internalFrame1);
-
-            // innerframe1_1 생성, 추가
-            JInternalFrame internalFrame1_1 = new JInternalFrame("증시 지수", true, true, true, true);
-            JPanel internalPanel1_1 = createPanelWithBorder("증시 지수");
-            internalFrame1_1.getContentPane().add(internalPanel1_1);
-            internalFrame1_1.setSize(width, height);
-            internalFrame1_1.setLocation(0, 0);
-            internalFrame1_1.setVisible(true);
-            desktopPane.add(internalFrame1_1);
 
             // innerframe2 생성, 추가
             JInternalFrame internalFrame2 = new JInternalFrame("종목 차트", true, true, true, true);
@@ -120,7 +111,7 @@ public class StockInfo_new {
 
             // 패널에 기능 추가
             Panel1Action.addFunctionality(internalPanel1); // 패널 1에 기능 추가
-            Panel11Action.addFunctionality(internalPanel1_1); // 패널 1_1
+            // Panel11Action.addFunctionality(internalPanel1);
             SI_PanelAction2.addFunctionality(internalPanel2,stockName); // 패널 2에 기능 추가
             SI_PanelAction2_1.addFunctionality(internalPanel2_1,stockName); // 패널 2-1에 기능 추가
             PanelAction3.addFunctionality(internalPanel3, userId); // 관심 주식 표시
@@ -154,23 +145,69 @@ public class StockInfo_new {
         JToolBar toolBar = new JToolBar("주식 매매 관리 시스템 툴바");
 
         // 툴바에 버튼 추가
-        JButton button1 = new JButton("버튼 1");
-        JButton button2 = new JButton("버튼 3");
+        JButton button1 = new JButton("로그아웃");
+        JButton button2 = new JButton("뒤로가기");
 
         // 각 버튼에 액션 추가
+        JFrame closeframe = new JFrame("로그아웃");
+        JLabel timerLabel = new JLabel("");
+
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(button2, BorderLayout.CENTER);
+        panel.add(timerLabel, BorderLayout.SOUTH);
+
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 버튼1 클릭 시 실행할 동작
-                System.out.println("버튼 1 클릭");
+                closeframe.dispose();
+                closeframe.getContentPane().removeAll();
+                closeframe.getContentPane().add(panel, BorderLayout.CENTER);
+
+
+                Timer timer = new Timer(1000, new ActionListener() {
+                    int count = 3;
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (count > 0) {
+                            timerLabel.setText("로그아웃 되기" + count + "초 전");
+                            count--;
+                        } else {
+                            ((Timer) e.getSource()).stop();
+                            System.exit(0);
+                        }
+                    }
+                });
+
+                timer.start();
+
+                closeframe.setSize(300, 200);
+
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                closeframe.setLocation(dim.width / 2 - closeframe.getSize().width / 2, dim.height / 2 - closeframe.getSize().height / 2);
+
+                // 프레임 내에 panel을 BorderLayout.CENTER에 배치
+                closeframe.getContentPane().setLayout(new BorderLayout());
+                closeframe.getContentPane().add(panel, BorderLayout.CENTER);
+
+                // timerLabel 가운데 정렬 및 글자 크기 설정
+                timerLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
+                timerLabel.setHorizontalAlignment(JLabel.CENTER);
+
+                closeframe.setVisible(true);
             }
         });
+
 
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // 버튼2 클릭 시 실행할 동작
-                System.out.println("버튼 2 클릭");
+                JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource());
+                currentFrame.dispose();  // 현재의 StockInfo_new 창 닫기
+                // 새로운 Home_new 창 열기
             }
         });
 

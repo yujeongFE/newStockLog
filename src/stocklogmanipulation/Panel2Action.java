@@ -14,7 +14,8 @@ public class Panel2Action { // 매도주식
     // 데이터를 담을 테이블 모델 생성
     static double e_price;
     static double price;
-    static DefaultTableModel tableModel = new DefaultTableModel();
+    static String[] columnNames = {"증권사", "종목명", "매도일", "매도단가", "매도수량", "수익률", "총 수익", "매매비용", "매매시작일", "평균매수단가", "메모"};
+    static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
     public static void addFunctionality(JPanel panel, String userId) {
         // 데이터베이스 연결
@@ -28,18 +29,7 @@ public class Panel2Action { // 매도주식
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            // 원하는 컬럼 순서와 이름을 추가
-            tableModel.addColumn("증권사");
-            tableModel.addColumn("종목명");
-            tableModel.addColumn("매도일");
-            tableModel.addColumn("매도단가");
-            tableModel.addColumn("매도수량");
-            tableModel.addColumn("수익률");
-            tableModel.addColumn("총 수익");
-            tableModel.addColumn("매매비용");
-            tableModel.addColumn("매매시작일");
-            tableModel.addColumn("평균매수단가");
-            tableModel.addColumn("메모");
+
 
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화

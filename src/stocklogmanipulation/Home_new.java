@@ -5,6 +5,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Home_new {
     static String userId; // 사용자 id 저장 변수 추가
@@ -130,8 +132,8 @@ public class Home_new {
         JToolBar toolBar = new JToolBar("주식 매매 관리 시스템 툴바");
 
         // 툴바에 버튼 추가
-        JButton button1 = new JButton("버튼 1");
-        JButton button2 = new JButton("버튼 2");
+        JButton button1 = new JButton("새로고침");
+        JButton button2 = new JButton("로그아웃");
 
         // 각 버튼에 액션 추가
         button1.addActionListener(new ActionListener() {
@@ -142,11 +144,54 @@ public class Home_new {
             }
         });
 
+        JFrame closeframe = new JFrame("로그아웃");
+        JLabel timerLabel = new JLabel("");
+
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(button2, BorderLayout.CENTER);
+        panel.add(timerLabel, BorderLayout.SOUTH);
+
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 버튼2 클릭 시 실행할 동작
-                System.out.println("버튼 2 클릭");
+                closeframe.dispose();
+                closeframe.getContentPane().removeAll();
+                closeframe.getContentPane().add(panel, BorderLayout.CENTER);
+
+
+                Timer timer = new Timer(1000, new ActionListener() {
+                    int count = 3;
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (count > 0) {
+                            timerLabel.setText("로그아웃 되기" + count + "초 전");
+                            count--;
+                        } else {
+                            ((Timer) e.getSource()).stop();
+                            System.exit(0);
+                        }
+                    }
+                });
+
+                timer.start();
+
+                closeframe.setSize(300, 200);
+
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                closeframe.setLocation(dim.width / 2 - closeframe.getSize().width / 2, dim.height / 2 - closeframe.getSize().height / 2);
+
+                // 프레임 내에 panel을 BorderLayout.CENTER에 배치
+                closeframe.getContentPane().setLayout(new BorderLayout());
+                closeframe.getContentPane().add(panel, BorderLayout.CENTER);
+
+                // timerLabel 가운데 정렬 및 글자 크기 설정
+                timerLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 25));
+                timerLabel.setHorizontalAlignment(JLabel.CENTER);
+
+                closeframe.setVisible(true);
             }
         });
 
