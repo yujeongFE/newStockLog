@@ -385,7 +385,7 @@ public class Panel3Action extends Thread {
                             Element item = (Element) itemList.item(i);
                             String scode = item.getElementsByTagName("srtnCd").item(0).getTextContent();
                             String itemName = item.getElementsByTagName("itmsNm").item(0).getTextContent();
-                            listModel.addElement(itemName + " (" + scode + ")");
+                            listModel.addElement(itemName);
                         }
 
                         if (listModel.isEmpty()) {
