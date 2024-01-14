@@ -149,10 +149,11 @@ public class Panel5Action { // 주식 매매 기록
             public void actionPerformed(ActionEvent e) {
                 String searchTerm = text.getText();
                 if (!searchTerm.isEmpty()) {
+                    listModel.clear();
                     performSearch(searchTerm, listModel);
                     searchList.setModel(listModel);
                 } else {
-                    JOptionPane.showMessageDialog(SellBuyFrame, "Please enter a search term.");
+                    JOptionPane.showMessageDialog(SellBuyFrame, "검색어를 입력해주세요.");
                 }
             }
         });

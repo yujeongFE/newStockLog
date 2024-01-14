@@ -1,5 +1,6 @@
 package stocklogmanipulation;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,14 +35,15 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
     static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "매매비용(세금, 수수료)", "메모"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
-    public static void addFunctionality(JPanel panel, String userId, String stockName) {
+    // Declare searchList as a class field
+    private static JList<String> searchList;
+    static String id;
+    public static void addFunctionality(JPanel panel, String userId) {
         DBconnection dbConnector = new DBconnection();
         Connection connection = dbConnector.getConnection();
 
-        tableModel.setRowCount(0);
-
-        String id = userId;
-        String query = "SELECT s.NAME, l.COMPANY, l.BUYORSELL, l.DATE, l.PRICE, l.QTY, l.RRATIO, l.MEMO FROM stock s, log l WHERE s.CODE = l.CODE AND U_ID = '" + id + "' AND s.Name = '" + stockName + "'";
+        id = userId;
+        String query = "SELECT s.NAME, l.COMPANY, l.BUYORSELL, l.DATE, l.PRICE, l.QTY, l.TAX, l.MEMO FROM stock s, log l WHERE s.CODE = l.CODE AND U_ID = '" + id + "'";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -59,14 +61,8 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
                 tableModel.addRow(row);
             }
 
-
             // 전체 화면 size 가져오기
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            // width, height 설정
-            int width = screenSize.width / 3;
-            int height = (screenSize.height-145) / 2;
-            int fullheight = screenSize.height-145;
-
 
             JButton searchButton = new JButton("매도/매수 기록 추가");
             searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
@@ -89,18 +85,17 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
 
             table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
-            // 주식 클릭하면 Home2 화면으로 이동
+            // 주식 클릭하면 Stock_Info 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 1) { // 클릭 확인
+                    if (e.getClickCount() == 1) {
                         JTable target = (JTable) e.getSource();
                         int row = target.getSelectedRow();
 
-                        // 여기서 선택된 행의 데이터를 얻을 수 있어요.
-                        String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
-                        // System.out.println(stockName);
-                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                        // 여기서 선택된 행의 데이터
+                        String stockName = (String) tableModel.getValueAt(row, 0);
+                        new StockInfo_new(userId, stockName);
                     }
                 }
             });
@@ -123,7 +118,7 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
         }
     }
 
-    private static void SellBuyFrame() {
+    public static void SellBuyFrame() {
         JFrame SellBuyFrame = new JFrame("매도/매수 기록 추가");
         SellBuyFrame.setLocation(800, 400);
         JPanel panel = new JPanel();
@@ -132,33 +127,115 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
         JPanel inputPanel = new JPanel();
         JLabel l1 = new JLabel();
         JTextField text = new JTextField(15);
-        JButton searchButton = new JButton("검색");
 
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+
+        searchList = new JList<>(listModel);
+        JScrollPane scrollPane = new JScrollPane(searchList);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        searchList.setVisible(true);
+        scrollPane.setVisible(true);
+
+        JButton searchButton = new JButton("검색");
         inputPanel.add(l1);
         inputPanel.add(text);
         inputPanel.add(searchButton);
 
-        panel.add(BorderLayout.CENTER, inputPanel);
-        panel.add(BorderLayout.SOUTH, new JLabel());
+        panel.add(BorderLayout.NORTH, inputPanel);
 
-        SellBuyFrame.getContentPane().add(panel);
-        SellBuyFrame.setSize(400, 400);
-        SellBuyFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        SellBuyFrame.setVisible(true);
-        SellBuyFrame.setLayout(new BorderLayout());
-
-        // Add ActionListener to the searchButton
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String searchTerm = text.getText();
                 if (!searchTerm.isEmpty()) {
-                    performSearch(searchTerm);
+                    listModel.clear();
+                    performSearch(searchTerm, listModel);
+                    searchList.setModel(listModel);
                 } else {
-                    JOptionPane.showMessageDialog(SellBuyFrame, "Please enter a search term.");
+                    JOptionPane.showMessageDialog(SellBuyFrame, "검색어를 입력해주세요.");
                 }
             }
         });
+
+        searchList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    int index = searchList.locationToIndex(e.getPoint());
+                    if (index >= 0) {
+                        String selectedItem = searchList.getModel().getElementAt(index);
+                        String selectedStockName;
+                        String selectedCode;
+
+                        // extractItemInfo 메서드를 사용하여 itemName과 code를 추출
+                        Pair<String, String> itemInfo = extractItemInfo(selectedItem);
+                        selectedStockName = itemInfo.getLeft();
+                        selectedCode = itemInfo.getRight();
+
+                        handleResultLabelClick(selectedStockName, selectedCode);
+                    }
+                }
+            }
+        });
+
+        SellBuyFrame.getContentPane().add(panel);
+        SellBuyFrame.setSize(400, 400);
+        SellBuyFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        SellBuyFrame.setVisible(true);
+        SellBuyFrame.setLayout(new BoxLayout(SellBuyFrame.getContentPane(), BoxLayout.Y_AXIS));
+    }
+
+    private static void performSearch(String searchTerm, DefaultListModel<String> listModel) {
+        try {
+            String[] dateRange = getLastBusinessDayRange();
+            String frdt = dateRange[0];
+            String todt = dateRange[1];
+
+            String urlStr = "https://api.odcloud.kr/api/GetStockSecuritiesInfoService/v1/getStockPriceInfo?";
+            urlStr += "serviceKey=" + "1%2FWP%2BVc3M5kGU2bikqOuBl9hAtMQ7OeqB24EL0llGF9zC75kdgM1jbsTy90LiI9hmDwU7jeFjW8P%2B1VPFtc%2BDg%3D%3D";
+            urlStr += "&beginBasDt=" + frdt;
+            urlStr += "&endBasDt=" + todt;
+            urlStr += "&likeItmsNm=" + URLEncoder.encode(searchTerm, "UTF-8");
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(urlStr).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            StringBuilder response = new StringBuilder();
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new ByteArrayInputStream(response.toString().getBytes("UTF-8")));
+
+            NodeList itemList = document.getElementsByTagName("item");
+
+            if (itemList.getLength() == 0) {
+                JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.");
+                return;
+            }
+
+            for (int i = 0; i < itemList.getLength(); i++) {
+                Node itemNode = itemList.item(i);
+                if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element itemElement = (Element) itemNode;
+                    String itemName = itemElement.getElementsByTagName("itmsNm").item(0).getTextContent();
+                    String scode = itemElement.getElementsByTagName("srtnCd").item(0).getTextContent();
+                    // listModel.addElement(itemName);
+                    listModel.addElement(itemName + " (" + scode + ")");
+                    // listModel.addElement(new SearchResult(itemName, scode));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "오류가 발생했습니다. 다시 시도해주세요.");
+        }
     }
 
     private static String[] getLastBusinessDayRange() {
@@ -178,86 +255,22 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
         return new String[]{frdt, todt};
     }
 
-    private static void performSearch(String searchTerm) {
-        try {
-            String[] dateRange = getLastBusinessDayRange();
-            String frdt = dateRange[0];
-            String todt = dateRange[1];
-
-            String urlStr = "https://api.odcloud.kr/api/GetStockSecuritiesInfoService/v1/getStockPriceInfo?";
-            urlStr += "serviceKey=" + "1%2FWP%2BVc3M5kGU2bikqOuBl9hAtMQ7OeqB24EL0llGF9zC75kdgM1jbsTy90LiI9hmDwU7jeFjW8P%2B1VPFtc%2BDg%3D%3D";
-            urlStr += "&beginBasDt=" + frdt;
-            urlStr += "&endBasDt=" + todt;
-            urlStr += "&likeItmsNm=" + URLEncoder.encode(searchTerm, "UTF-8");
-            System.out.println(urlStr);
-
-            HttpURLConnection connection = (HttpURLConnection) new URL(urlStr).openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-            StringBuilder response = new StringBuilder();
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-            System.out.println("결과값: " + response.toString());
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new ByteArrayInputStream(response.toString().getBytes("UTF-8")));
-
-            NodeList itemList = document.getElementsByTagName("item");
-
-            // 검색결과가 0인 경우
-            if (itemList.getLength() == 0) {
-                JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.");
-                return;
-            }
-
-            // 패널에 결과값 추가
-            JPanel searchResultsPanel = new JPanel(new GridLayout(itemList.getLength(), 1));
-
-            for (int i = 0; i < itemList.getLength(); i++) {
-                Node itemNode = itemList.item(i);
-                if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element itemElement = (Element) itemNode;
-                    String itemName = itemElement.getElementsByTagName("itmsNm").item(0).getTextContent();
-
-                    // 검색 결과 항목마다 라벨 생성
-                    JLabel resultLabel = new JLabel(itemName);
-
-                    // 라벨에 ActionListener 추가
-                    resultLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                            // 라벨을 클릭했을 때 수행할 메서드 호출
-                            handleResultLabelClick(itemElement, resultLabel); // 라벨과 함께 전달
-                        }
-                    });
-
-                    searchResultsPanel.add(resultLabel);
-                }
-            }
-
-            // 검색 결과 보여주는 프레임 생성
-            JFrame resultsFrame = new JFrame("검색 결과");
-            resultsFrame.setLayout(new BorderLayout());
-            resultsFrame.setSize(200, 200);
-
-            resultsFrame.add(searchResultsPanel, BorderLayout.SOUTH);
-
-            // 프레임을 보이게 한다.
-            resultsFrame.setVisible(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "오류가 발생했습니다. 다시 시도해주세요.");
-        }
+    private static void handleResultLabelClick(String selectedStockName, String selectedCode) {
+        SellBuy sb = new SellBuy();
+        sb.setFrame(sb, id, selectedCode);
+        sb.setSelectedStockName(selectedStockName);
+        sb.openFrame(selectedStockName);
     }
-
-    private static void handleResultLabelClick(Element itemElement, JLabel resultLabel) {
-        // 이 부분에서 검색 결과 항목을 클릭했을 때 수행할 동작을 구현해주세요.
-        resultLabel.setForeground(Color.BLUE);
+    // itemName과 code를 함께 추출하는 메서드
+    private static Pair<String, String> extractItemInfo(String selectedItem) {
+        int indexOfParenthesis = selectedItem.indexOf(" (");
+        if (indexOfParenthesis != -1) {
+            String itemName = selectedItem.substring(0, indexOfParenthesis);
+            String code = selectedItem.substring(indexOfParenthesis + 2, selectedItem.length() - 1);
+            return Pair.of(itemName, code);
+        } else {
+            // 괄호가 없는 경우
+            return Pair.of(selectedItem, "");
+        }
     }
 }

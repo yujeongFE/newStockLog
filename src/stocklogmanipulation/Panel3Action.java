@@ -19,6 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
@@ -111,11 +112,9 @@ public class Panel3Action extends Thread {
                             JTable target = (JTable) e.getSource();
                             int row = target.getSelectedRow();
 
-                            // 여기서 선택된 행의 데이터를 얻을 수 있어요.
-                            String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
-                            // System.out.println(stockName);
-                            new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
-                        }
+                        String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
+                        // System.out.println(stockName);
+                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
                     }
                 });
 
@@ -175,7 +174,6 @@ public class Panel3Action extends Thread {
         StringBuffer strBuffer = new StringBuffer();
 
         try {
-            // API 요청 URL을 동적으로 생성
             String urlStr = "https://api.odcloud.kr/api/GetStockSecuritiesInfoService/v1/getStockPriceInfo?";
             urlStr += "serviceKey=" + "1%2FWP%2BVc3M5kGU2bikqOuBl9hAtMQ7OeqB24EL0llGF9zC75kdgM1jbsTy90LiI9hmDwU7jeFjW8P%2B1VPFtc%2BDg%3D%3D";  // API 키를 적절하게 설정
             urlStr += "&beginBasDt=" + frdt;
@@ -234,6 +232,13 @@ public class Panel3Action extends Thread {
                 while ((line = in.readLine()) != null) {
                     strBuffer.append(line);
                 }
+
+                // 만약 검색 결과가 0인 경우에 대한 처리
+                if (strBuffer.length() == 0) {
+                    // 팝업을 통해 사용자에게 알림
+                    JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.");
+                }
+
             } else {
                 System.out.println("HTTP request failed with response code: " + responseCode);
                 // 사용자에게 502 에러가 발생했음을 알리는 메시지
@@ -307,8 +312,7 @@ public class Panel3Action extends Thread {
 
         JList<String> searchList = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(searchList);
-        panel.add(scrollPane, BorderLayout.CENTER); // Changed to CENTER
-        searchList.setVisible(true);
+        panel.add(scrollPane, BorderLayout.CENTER);
         scrollPane.setVisible(true);
         text.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -335,8 +339,6 @@ public class Panel3Action extends Thread {
                         filteredModel.addElement(item);
                     }
                 }
-                searchList.setModel(filteredModel); // Set the model for searchList
-                searchList.setVisible(!searchText.isEmpty());
                 scrollPane.setVisible(!searchText.isEmpty());
             }
         });
@@ -347,7 +349,6 @@ public class Panel3Action extends Thread {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // Get the user input from the text field
                     String searchKeyword = text.getText();
 
                     String encodedSearchTerm = URLEncoder.encode(searchKeyword, "UTF-8");
@@ -359,7 +360,6 @@ public class Panel3Action extends Thread {
                     StringBuffer stockPriceData = getStockPriceWithDifferentParam(encodedSearchTerm, frdt, todt);
 
                     if (stockPriceData.length() > 0) {
-
                         // XML 파싱
                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -370,9 +370,17 @@ public class Panel3Action extends Thread {
                         NodeList itemList = document.getElementsByTagName("item");
                         for (int i = 0; i < itemList.getLength(); i++) {
                             Element item = (Element) itemList.item(i);
+                            String scode = item.getElementsByTagName("srtnCd").item(0).getTextContent();
                             String itemName = item.getElementsByTagName("itmsNm").item(0).getTextContent();
                             listModel.addElement(itemName);
                         }
+
+                        if (listModel.isEmpty()) {
+                            // 검색 결과가 없을 때 알림
+                            JOptionPane.showMessageDialog(null, "종목명 검색과 일치하는 결과가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                        // 이후 코드는 변경하지 않음
                         DefaultListModel<String> newModel = new DefaultListModel<>();
                         for (int i = 0; i < listModel.size(); i++) {
                             newModel.addElement(listModel.getElementAt(i));
@@ -383,10 +391,13 @@ public class Panel3Action extends Thread {
                         searchList.setVisible(true);
                         scrollPane.setVisible(true);
                     } else {
+                        // 수정된 부분: 검색 결과가 없을 때 알림
+                        JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                } finally {
+                    // 수정된 부분: 검색 중 오류 발생 시 알림
+                    JOptionPane.showMessageDialog(null, "검색 중 오류가 발생했습니다.", "에러", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -394,12 +405,7 @@ public class Panel3Action extends Thread {
         searchList.addListSelectionListener(e -> {
             // 선택한 항목의 인덱스 가져오기
             int[] selectedIndices = searchList.getSelectedIndices();
-
-            // 선택한 항목이 없으면 테이블 비우기
-            if (selectedIndices.length == 0) {
-                tableModel.setRowCount(0);
-                return;
-            }
+            
 
             // 기존 테이블 데이터 유지
             int rowCount = tableModel.getRowCount();
@@ -440,7 +446,7 @@ public class Panel3Action extends Thread {
                         if (stockPriceData.length() > 0) {
                             // 응답을 기반으로 UI 업데이트
                             // XML 파싱
-                            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                            DocumentBuilderFactory factory = DocumentBuilderFachttps://github.com/yujeongFE/newStockLog/pull/8/conflict?name=src%252Fstocklogmanipulation%252FPanel3Action.java&ancestor_oid=52cdb4c5cb9eeaefa0442abede987258febdfc5c&base_oid=53e63c354d886f47ebe6ef091f43b378616d0e04&head_oid=68a7fac70c436c249846fc5a7ef147c531365c66tory.newInstance();
                             DocumentBuilder builder = factory.newDocumentBuilder();
                             InputSource is = new InputSource(new StringReader(stockPriceData.toString()));
                             Document document = builder.parse(is);
