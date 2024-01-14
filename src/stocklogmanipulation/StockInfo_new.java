@@ -123,10 +123,10 @@ public class StockInfo_new {
             Panel1_1Action.addFunctionality(internalPanel1_1);
             SI_PanelAction2.addFunctionality(internalPanel2,stockName); // 패널 2에 기능 추가
             SI_PanelAction2_1.addFunctionality(internalPanel2_1,stockName); // 패널 2-1에 기능 추가
-            PanelAction3.addFunctionality(internalPanel3, userId); // 관심 주식 표시
+            PanelAction3.addFunctionality(internalPanel3, stockName); // 관심 주식 표시
             PanelAction4.addFunctionality(internalPanel4, userId); // 보유 주식 표시
-            H2_PanelAction5.addFunctionality(internalPanel5, stockName); // 패널 5에 기능 추가
-            H2_PanelAction5_1.addFunctionality(internalPanel5_1); // 패널5-1에 기능 추가
+            SI_Panel5Action.addFunctionality(internalPanel5, stockName); // 패널 5에 기능 추가
+            SI_Panel5_1Action.addFunctionality(internalPanel5_1); // 패널5-1에 기능 추가
             PanelAction6.addFunctionality(internalPanel6, userId, stockName); // 패널 6에 기능 추가
             Panel6Action.executeApiRequestAndDisplayInPanel(bottomPanel); // 하단 바에 기능 추가
 
