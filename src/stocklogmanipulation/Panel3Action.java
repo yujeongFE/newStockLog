@@ -353,48 +353,6 @@ public class Panel3Action extends Thread {
             }
         });
 
-        searchList.addListSelectionListener(e -> {
-            String selectedValue = searchList.getSelectedValue();
-            if (selectedValue != null) {
-                // 테이블에 선택된 항목이 없으면 추가
-                boolean alreadyExists = false;
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    if (selectedValue.equals(tableModel.getValueAt(i, 0))) {
-                        alreadyExists = true;
-                        break;
-                    }
-                }
-
-                // 테이블 모델에 추가되지 않은 경우에만 추가
-                if (!alreadyExists) {
-                    try {
-                        String searchKeyword = text.getText();
-
-                        // Encode the search term
-                        String encodedSearchTerm = URLEncoder.encode(searchKeyword, "UTF-8");
-
-                        // Get the last business day range
-                        String[] dateRange = getLastBusinessDayRange();
-                        String frdt = dateRange[0];
-                        String todt = dateRange[1];
-
-                        // Make the API request
-                        StringBuffer stockPriceData = getStockPriceWithDifferentParam(encodedSearchTerm, frdt, todt);
-
-                        if (stockPriceData.length() > 0) {
-                            // Update the UI based on the response
-                            System.out.println("Stock Price Data:2\n" + stockPriceData.toString());
-                        } else {
-                            System.out.println("No stock price data available for the specified parameters.");
-                        }
-                    } catch (UnsupportedEncodingException ex) {
-
-                    } catch (Exception ex) {
-
-                    }
-                }
-            }
-        });
 
         // 검색 버튼 클릭 시 이벤트
         findButton.addActionListener(new ActionListener() {
