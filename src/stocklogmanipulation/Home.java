@@ -1,7 +1,5 @@
 package stocklogmanipulation;
 
-import stocklogmanipulation.DBconnection;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -32,7 +30,7 @@ public class Home {
 
         // 패널에 기능 추가
         Panel1Action.addFunctionality(topLeftPanel); // 패널 1에 기능 추가
-        Panel11Action.addFunctionality(topLeftPanel2);
+        Panel1_1Action.addFunctionality(topLeftPanel2);
         Panel2Action.addFunctionality(topRightPanel, userId); // 패널 2에 기능 추가
         Panel3Action.addFunctionality(bottomLeftPanel, userId); // 관심 주식 표시
         Panel4Action.addFunctionality(bottomRightPanel, userId); // 보유 주식 표시

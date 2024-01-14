@@ -26,19 +26,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-public class Panel1Action extends Thread {
+public class Panel1_1Action extends Thread {
     private final JPanel panelToUpdate;
 
-    public Panel1Action(JPanel panelToUpdate) {
+
+    public Panel1_1Action(JPanel panelToUpdate) {
         this.panelToUpdate = panelToUpdate;
     }
 
     @Override
-    // 스레드가 호출되면 실행되는 메서드
     public void run() {
         long initialDelay = calculateInitialDelay();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> addFunctionality(panelToUpdate), initialDelay, 24, TimeUnit.HOURS); // 자정이 지났을때 새로운 api를 받아옴
+        scheduler.scheduleAtFixedRate(() -> addFunctionality(panelToUpdate), initialDelay, 24, TimeUnit.HOURS);
     }
 
     private long calculateInitialDelay() {
@@ -49,25 +49,27 @@ public class Panel1Action extends Thread {
         nextMidnight.set(Calendar.SECOND, 0);
         nextMidnight.set(Calendar.MILLISECOND, 0);
 
-        long initialDelayMillis = nextMidnight.getTimeInMillis() - now.getTimeInMillis(); // 현재시간으로부터 자정까지 남은 시간 계산
-        if (initialDelayMillis < 0) { // 음수라면
-            initialDelayMillis += TimeUnit.HOURS.toMillis(24); // 이미 자정이 넘은 것이므로, 하루 증가
+        long initialDelayMillis = nextMidnight.getTimeInMillis() - now.getTimeInMillis();
+        if (initialDelayMillis < 0) {
+            initialDelayMillis += TimeUnit.HOURS.toMillis(24);
         }
 
-        return initialDelayMillis; // 자정으로부터 남은 시간 반환
+        return initialDelayMillis;
     }
 
     protected static void addFunctionality(JPanel panelToUpdate) {
         try {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, -7); // 검색 시작일을 7일 전으로 설정
+            calendar.add(Calendar.DAY_OF_YEAR, -7); // endDate를 7일 전으로 설정
             long startDate = calendar.getTimeInMillis() / 1000;
 
             // endDate를 현재 날짜로 설정
             long endDate = System.currentTimeMillis() / 1000;
 
-            String apiUrl = "https://query1.finance.yahoo.com/v8/finance/chart/^KS11?period1=" + startDate +
+            String apiUrl = "https://query1.finance.yahoo.com/v8/finance/chart/^KQ11?period1=" + startDate +
                     "&period2=" + endDate + "&interval=1d";
+
+            System.out.println(apiUrl);
 
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -133,6 +135,8 @@ public class Panel1Action extends Thread {
             JSONArray timestampArray = (JSONArray) resultObject.get("timestamp");
             JSONArray closeArray = (JSONArray) quoteObject.get("close");
 
+            System.out.println(timestampArray);
+
             if (timestampArray != null) {
                 for (Object timestamp : timestampArray) {
                     timestampData.add((Long) timestamp);
@@ -159,7 +163,7 @@ public class Panel1Action extends Thread {
             TimeSeriesCollection dataset = new TimeSeriesCollection(series);
 
             JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                    "KOSPI",
+                    "KOSDAQ",
                     "일자",
                     "종가",
                     dataset,
@@ -195,7 +199,8 @@ public class Panel1Action extends Thread {
             chart.getXYPlot().getRangeAxis().setLabelFont(font);
             chart.getTitle().setFont(new Font("맑은 고딕", Font.BOLD, 18));
 
-            rangeAxis.setRange(2200, 3000);
+            rangeAxis.setLabel("종가");
+            rangeAxis.setRange(800, 900);
 
             ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(new Dimension(panelToUpdate.getWidth(), panelToUpdate.getHeight()));
