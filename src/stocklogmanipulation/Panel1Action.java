@@ -28,17 +28,19 @@ import org.json.simple.parser.JSONParser;
 
 public class Panel1Action extends Thread {
     private final JPanel panelToUpdate;
+
     public Panel1Action(JPanel panelToUpdate) {
         this.panelToUpdate = panelToUpdate;
     }
+
     @Override
     // 스레드가 호출되면 실행되는 메서드
     public void run() {
         long initialDelay = calculateInitialDelay();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        // 자정이 지났을때 새로운 API를 받아옴
-        scheduler.scheduleAtFixedRate(() -> addFunctionality(panelToUpdate), initialDelay, 24, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(() -> addFunctionality(panelToUpdate), initialDelay, 24, TimeUnit.HOURS); // 자정이 지났을때 새로운 api를 받아옴
     }
+
     private long calculateInitialDelay() {
         Calendar now = Calendar.getInstance();
         Calendar nextMidnight = Calendar.getInstance();
@@ -46,12 +48,12 @@ public class Panel1Action extends Thread {
         nextMidnight.set(Calendar.MINUTE, 0);
         nextMidnight.set(Calendar.SECOND, 0);
         nextMidnight.set(Calendar.MILLISECOND, 0);
-        // 현재시간으로부터 자정까지 남은 시간 계산
-        long initialDelayMillis = nextMidnight.getTimeInMillis() - now.getTimeInMillis();
+
+        long initialDelayMillis = nextMidnight.getTimeInMillis() - now.getTimeInMillis(); // 현재시간으로부터 자정까지 남은 시간 계산
         if (initialDelayMillis < 0) { // 음수라면
-            // 이미 자정이 넘은 것이므로, 하루 증가
-            initialDelayMillis += TimeUnit.HOURS.toMillis(24);
+            initialDelayMillis += TimeUnit.HOURS.toMillis(24); // 이미 자정이 넘은 것이므로, 하루 증가
         }
+
         return initialDelayMillis; // 자정으로부터 남은 시간 반환
     }
 
@@ -152,7 +154,6 @@ public class Panel1Action extends Thread {
             for (int i = 0; i < timestampData.size(); i++) {
                 Date xDate = new Date(timestampData.get(i) * 1000);
                 series.addOrUpdate(new Day(xDate), closeData.get(i));
-                System.out.println("Date: " + dateFormat.format(xDate) + ", Close Price: " + closeData.get(i));
             }
 
             TimeSeriesCollection dataset = new TimeSeriesCollection(series);

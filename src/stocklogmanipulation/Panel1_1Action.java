@@ -29,7 +29,6 @@ import org.json.simple.parser.JSONParser;
 public class Panel1_1Action extends Thread {
     private final JPanel panelToUpdate;
 
-
     public Panel1_1Action(JPanel panelToUpdate) {
         this.panelToUpdate = panelToUpdate;
     }
