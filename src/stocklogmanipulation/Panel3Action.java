@@ -10,7 +10,6 @@ import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
@@ -19,7 +18,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
@@ -28,12 +26,16 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static stocklogmanipulation.Panel5Action.row;
+
 // 패널 3에 대한 동작을 처리하는 클래스
-public class Panel3Action extends Thread {
+public class Panel3Action {
+    // 클래스 전역으로 선언
     static String[] columnNames = {"종목명", "종목코드", "현재주가", "시장 구분", "전일대비등락", "전일대비등락비"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
-    private static final long UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24시간
+    static JTable table = new JTable(tableModel);
 
+    // addFunctionality 메서드 수정
     public static void addFunctionality(JPanel panel, String userId) {
         // 데이터베이스 연결
         DBconnection dbConnector = new DBconnection();
@@ -55,7 +57,6 @@ public class Panel3Action extends Thread {
                 stockName = resultSet.getObject(1).toString(); // Object를 String으로 변환하여 stockName에 저장
                 row[1] = resultSet.getObject(2);
                 row[3] = resultSet.getObject(3);
-                // tableModel.addRow(row);
 
                 // 날짜 범위 설정
                 String[] dateRange = getLastBusinessDayRange();
@@ -74,66 +75,64 @@ public class Panel3Action extends Thread {
                     }
                 } else {
                 }
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-                // JButton 생성 및 패널에 추가
-                JButton searchButton = new JButton("관심 주식 추가");
-                searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
-                searchButton.setPreferredSize(new Dimension( screenSize.width,34));
-
-                // 관심 주식 추가 버튼을 눌렀을 때 이벤트
-                searchButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        DefaultTableModel DefaultTableModel = new DefaultTableModel();
-                        InterestStockFrame(tableModel, row, userId);
-                    }
-                });
-                panel.add(searchButton, BorderLayout.SOUTH);
-
-
-                // JLabel 생성 및 패널에 추가
-                JLabel label = new JLabel("관심 주식", SwingConstants.CENTER);
-                panel.add(label, BorderLayout.NORTH);
-
-                JTable table = new JTable(tableModel);
-
-                JTableHeader header = table.getTableHeader();
-                header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
-
-                // 폰트 사이즈
-                table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-
-                // 주식 클릭하면 Home2 화면으로 이동
-                table.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (e.getClickCount() == 1) { // 클릭 확인
-                            JTable target = (JTable) e.getSource();
-                            int row = target.getSelectedRow();
-
-                        String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
-                        // System.out.println(stockName);
-                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
-                    }
-                });
-
-                // 테이블 크기 조정
-                table.setPreferredScrollableViewportSize(table.getPreferredSize());
-
-                // JScrollPane으로 테이블을 감싸기
-                JScrollPane scrollPane = new JScrollPane(table);
-
-                // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
-                Dimension panelSize = panel.getPreferredSize();
-                int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
-
-                scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
-
-                // 패널에 JScrollPane 추가
-                panel.add(scrollPane, BorderLayout.CENTER);
-
             }
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+            // JButton 생성 및 패널에 추가
+            JButton searchButton = new JButton("관심 주식 추가");
+            searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
+            searchButton.setPreferredSize(new Dimension( screenSize.width,34));
+
+            // 관심 주식 추가 버튼을 눌렀을 때 이벤트
+            searchButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    DefaultTableModel DefaultTableModel = new DefaultTableModel();
+                    InterestStockFrame(tableModel, row, userId);
+                }
+            });
+            panel.add(searchButton, BorderLayout.SOUTH);
+
+            // JLabel 생성 및 패널에 추가
+            JLabel label = new JLabel("관심 주식", SwingConstants.CENTER);
+            panel.add(label, BorderLayout.NORTH);
+
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            // 폰트 사이즈
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+
+            // 주식 클릭하면 Home2 화면으로 이동
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 1) { // 클릭 확인
+                        JTable target = (JTable) e.getSource();
+                        int row = target.getSelectedRow();
+
+                        // 여기서 선택된 행의 데이터를 얻을 수 있음
+                        String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
+
+                        new StockInfo(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                    }
+                }
+            });
+
+            // 테이블 크기 조정
+            table.setPreferredScrollableViewportSize(table.getPreferredSize());
+
+            // JScrollPane으로 테이블을 감싸기
+            JScrollPane scrollPane = new JScrollPane(table);
+
+            // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
+            Dimension panelSize = panel.getPreferredSize();
+            int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
+
+            scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
+
+            // 패널에 JScrollPane 추가
+            panel.add(scrollPane, BorderLayout.CENTER);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,6 +145,7 @@ public class Panel3Action extends Thread {
             dbConnector.closeConnection();
         }
     }
+
     private static String[] getLastBusinessDayRange() {
         Calendar calendar = Calendar.getInstance();
 
@@ -174,6 +174,7 @@ public class Panel3Action extends Thread {
         StringBuffer strBuffer = new StringBuffer();
 
         try {
+            // API 요청 URL을 동적으로 생성
             String urlStr = "https://api.odcloud.kr/api/GetStockSecuritiesInfoService/v1/getStockPriceInfo?";
             urlStr += "serviceKey=" + "1%2FWP%2BVc3M5kGU2bikqOuBl9hAtMQ7OeqB24EL0llGF9zC75kdgM1jbsTy90LiI9hmDwU7jeFjW8P%2B1VPFtc%2BDg%3D%3D";  // API 키를 적절하게 설정
             urlStr += "&beginBasDt=" + frdt;
@@ -193,6 +194,11 @@ public class Panel3Action extends Thread {
                 String line;
                 while ((line = in.readLine()) != null) {
                     strBuffer.append(line);
+                    // 만약 검색 결과가 0인 경우에 대한 처리
+                    if (strBuffer.length() == 0) {
+                        // 팝업을 통해 사용자에게 알림
+                        JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.");
+                    }
                 }
             } else {
                 System.out.println("HTTP request failed with response code: " + responseCode);
@@ -232,13 +238,6 @@ public class Panel3Action extends Thread {
                 while ((line = in.readLine()) != null) {
                     strBuffer.append(line);
                 }
-
-                // 만약 검색 결과가 0인 경우에 대한 처리
-                if (strBuffer.length() == 0) {
-                    // 팝업을 통해 사용자에게 알림
-                    JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.");
-                }
-
             } else {
                 System.out.println("HTTP request failed with response code: " + responseCode);
                 // 사용자에게 502 에러가 발생했음을 알리는 메시지
@@ -291,6 +290,8 @@ public class Panel3Action extends Thread {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
+
+// 검색어 입력 패널 및 리스트 모델 초기화
         JPanel inputPanel = new JPanel();
         JLabel l1 = new JLabel();
         JTextField text = new JTextField(15);
@@ -308,11 +309,14 @@ public class Panel3Action extends Thread {
         interestFrame.setVisible(true);
         interestFrame.setLayout(new BorderLayout());
 
+// DefaultListModel 초기화
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
         JList<String> searchList = new JList<>(listModel);
+
         JScrollPane scrollPane = new JScrollPane(searchList);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(scrollPane, BorderLayout.CENTER); // Changed to CENTER
+        searchList.setVisible(true);
         scrollPane.setVisible(true);
         text.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -339,6 +343,8 @@ public class Panel3Action extends Thread {
                         filteredModel.addElement(item);
                     }
                 }
+                searchList.setModel(filteredModel); // Set the model for searchList
+                searchList.setVisible(!searchText.isEmpty());
                 scrollPane.setVisible(!searchText.isEmpty());
             }
         });
@@ -349,6 +355,8 @@ public class Panel3Action extends Thread {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    // Get the user input from the text field
+                    listModel.clear();
                     String searchKeyword = text.getText();
 
                     String encodedSearchTerm = URLEncoder.encode(searchKeyword, "UTF-8");
@@ -366,21 +374,22 @@ public class Panel3Action extends Thread {
                         InputSource is = new InputSource(new StringReader(stockPriceData.toString()));
                         Document document = builder.parse(is);
 
-                        listModel.clear();
                         NodeList itemList = document.getElementsByTagName("item");
                         for (int i = 0; i < itemList.getLength(); i++) {
                             Element item = (Element) itemList.item(i);
-                            String scode = item.getElementsByTagName("srtnCd").item(0).getTextContent();
                             String itemName = item.getElementsByTagName("itmsNm").item(0).getTextContent();
-                            listModel.addElement(itemName);
+
+                            if (!listModel.contains(itemName)) {
+                                listModel.addElement(itemName);
+                            }
                         }
 
+                        // If the search results are empty, show a message
                         if (listModel.isEmpty()) {
-                            // 검색 결과가 없을 때 알림
                             JOptionPane.showMessageDialog(null, "종목명 검색과 일치하는 결과가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
                         }
 
-                        // 이후 코드는 변경하지 않음
+                        // Update JList and JScrollPane
                         DefaultListModel<String> newModel = new DefaultListModel<>();
                         for (int i = 0; i < listModel.size(); i++) {
                             newModel.addElement(listModel.getElementAt(i));
@@ -390,22 +399,17 @@ public class Panel3Action extends Thread {
                         searchList.repaint();
                         searchList.setVisible(true);
                         scrollPane.setVisible(true);
-                    } else {
-                        // 수정된 부분: 검색 결과가 없을 때 알림
-                        JOptionPane.showMessageDialog(null, "검색 결과가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    // 수정된 부분: 검색 중 오류 발생 시 알림
-                    JOptionPane.showMessageDialog(null, "검색 중 오류가 발생했습니다.", "에러", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
+
         searchList.addListSelectionListener(e -> {
             // 선택한 항목의 인덱스 가져오기
             int[] selectedIndices = searchList.getSelectedIndices();
-            
 
             // 기존 테이블 데이터 유지
             int rowCount = tableModel.getRowCount();
@@ -428,11 +432,26 @@ public class Panel3Action extends Thread {
 
                 // 중복이 아닌 경우에만 행 추가
                 if (!isDuplicate && rowIndex >= tableModel.getRowCount()) {
+                    SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            return null;
+                        }
+                        @Override
+                        protected void done() {
+                            try {
+                                SwingUtilities.invokeLater(() -> {
+                                    JOptionPane.showMessageDialog(null, "추가되었습니다.");
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    worker.execute();
                     try {
                         // 수정된 부분: 검색어 대신 사용자가 선택한 항목의 텍스트 사용
                         String selectedItemText = selectedValue;
-
-                        // Encode the search term
                         String encodedSearchTerm = URLEncoder.encode(selectedItemText, "UTF-8");
 
                         // 마지막 영업일 범위 가져오기
@@ -446,7 +465,7 @@ public class Panel3Action extends Thread {
                         if (stockPriceData.length() > 0) {
                             // 응답을 기반으로 UI 업데이트
                             // XML 파싱
-                            DocumentBuilderFactory factory = DocumentBuilderFachttps://github.com/yujeongFE/newStockLog/pull/8/conflict?name=src%252Fstocklogmanipulation%252FPanel3Action.java&ancestor_oid=52cdb4c5cb9eeaefa0442abede987258febdfc5c&base_oid=53e63c354d886f47ebe6ef091f43b378616d0e04&head_oid=68a7fac70c436c249846fc5a7ef147c531365c66tory.newInstance();
+                            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                             DocumentBuilder builder = factory.newDocumentBuilder();
                             InputSource is = new InputSource(new StringReader(stockPriceData.toString()));
                             Document document = builder.parse(is);
@@ -514,7 +533,7 @@ public class Panel3Action extends Thread {
                                     // 연결 닫기 등의 마무리 작업
                                     dbConnector1.closeConnection();
                                 }
-                                // stock
+
                             }
                         } else {
                             System.out.println("No stock price data available for the specified parameters.");

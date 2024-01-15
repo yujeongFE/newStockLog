@@ -32,8 +32,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 
 public class Panel5Action { // 주식 매매 기록
-    static Object[] row = new Object[8];
-    static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "매매비용(세금, 수수료)", "메모"};
+    static Object[] row = new Object[9];
+    static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "수익률", "매매비용(세금, 수수료)", "메모"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
     private static JList<String> searchList;
@@ -43,7 +43,7 @@ public class Panel5Action { // 주식 매매 기록
         Connection connection = dbConnector.getConnection();
 
         id = userId;
-        String query = "SELECT s.NAME, l.COMPANY, l.BUYORSELL, l.DATE, l.PRICE, l.QTY, l.TAX, l.MEMO FROM stock s, log l WHERE s.CODE = l.CODE AND U_ID = '" + id + "'";
+        String query = "SELECT s.NAME, l.COMPANY, l.BUYORSELL, l.DATE, l.PRICE, l.QTY, l.RRATIO, l.TAX, l.MEMO FROM stock s, log l WHERE s.CODE = l.CODE AND U_ID = '" + id + "'";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -58,6 +58,7 @@ public class Panel5Action { // 주식 매매 기록
                 row[5] = resultSet.getObject(6);
                 row[6] = resultSet.getObject(7);
                 row[7] = resultSet.getObject(8);
+                row[8] = resultSet.getObject(9);
                 tableModel.addRow(row);
             }
 
@@ -95,7 +96,7 @@ public class Panel5Action { // 주식 매매 기록
 
                         // 여기서 선택된 행의 데이터
                         String stockName = (String) tableModel.getValueAt(row, 0);
-                        new StockInfo_new(userId, stockName);
+                        new StockInfo(userId, stockName);
                     }
                 }
             });
@@ -150,7 +151,7 @@ public class Panel5Action { // 주식 매매 기록
                 if (!searchTerm.isEmpty()) {
                     listModel.clear();
                     performSearch(searchTerm, listModel);
-                    searchList.setModel(listModel);
+
                 } else {
                     JOptionPane.showMessageDialog(SellBuyFrame, "검색어를 입력해주세요.");
                 }
@@ -226,9 +227,19 @@ public class Panel5Action { // 주식 매매 기록
                     Element itemElement = (Element) itemNode;
                     String itemName = itemElement.getElementsByTagName("itmsNm").item(0).getTextContent();
                     String scode = itemElement.getElementsByTagName("srtnCd").item(0).getTextContent();
-                    // listModel.addElement(itemName);
-                    listModel.addElement(itemName + " (" + scode + ")");
-                    // listModel.addElement(new SearchResult(itemName, scode));
+
+                    boolean isDuplicate = false;
+                    for (int j = 0; j < listModel.size(); j++) {
+                        String existingItem = listModel.getElementAt(j);
+                        if (existingItem.startsWith(itemName)) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+
+                    if (!isDuplicate) {
+                        listModel.addElement(itemName + " (" + scode + ")");
+                    }
                 }
             }
 
