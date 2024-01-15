@@ -8,12 +8,10 @@ import java.sql.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-// 패널 3에 대한 동작을 처리하는 클래스
+// 패널 2에 대한 동작을 처리하는 클래스
 public class Panel2Action { // 매도주식
     static Object[] row = new Object[11];
     // 데이터를 담을 테이블 모델 생성
-    static double e_price;
-    static double price;
     static String[] columnNames = {"증권사", "종목명", "매도일", "매도단가", "매도수량", "수익률", "총 수익", "매매비용", "매매시작일", "평균매수단가", "메모"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
@@ -28,8 +26,6 @@ public class Panel2Action { // 매도주식
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-
-
 
             // 결과셋의 데이터를 테이블 모델에 추가
             String stockName = null; // 변수를 루프 바깥에 선언하고 초기화
@@ -58,7 +54,7 @@ public class Panel2Action { // 매도주식
             header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
 
             // Set the font size for cell content
-            table.setFont(new Font("SansSerif", Font.PLAIN, 15));
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 
             // 주식 클릭하면 Home2 화면으로 이동
             table.addMouseListener(new MouseAdapter() {
@@ -71,7 +67,7 @@ public class Panel2Action { // 매도주식
                         // 여기서 선택된 행의 데이터를 얻을 수 있어요.
                         String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
 
-                        new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                        new StockInfo(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
                     }
                 }
             });
