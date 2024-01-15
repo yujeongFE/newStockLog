@@ -316,7 +316,7 @@ public class LoginSignin {
 
                             loginFrame.dispose(); // 로그인 창 닫기
                             SwingUtilities.invokeLater(() -> {
-                                new Home_new(userId); // 홈 화면 열기
+                                new Home(userId); // 홈 화면 열기
                             });
                         } else {
                             JOptionPane.showMessageDialog(loginFrame, "로그인에 실패했습니다. 회원이 아니시면 회원가입을 진행해주세요.");
