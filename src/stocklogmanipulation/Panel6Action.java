@@ -39,7 +39,7 @@ public class Panel6Action {
     public static void executeApiRequestAndDisplayInPanel(JPanel panel) {
         try {
             long 시작날짜 = convertDateToTimestamp("20240101");
-            long 종료날짜 = convertDateToTimestamp("20240107");
+            long 종료날짜 = convertDateToTimestamp("202401015");
 
             String kospiUrl = "https://query1.finance.yahoo.com/v8/finance/chart/^KS11?period1=" + 시작날짜 +
                     "&period2=" + 종료날짜 + "&interval=1d";
