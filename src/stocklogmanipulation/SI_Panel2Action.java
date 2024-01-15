@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.awt.Color;
 
-public class SI_PanelAction2 {
+public class SI_Panel2Action {
 
     public static void addFunctionality(JPanel panel, String stockName) {
         createChartForPanel(panel, stockName);
@@ -58,7 +58,7 @@ public class SI_PanelAction2 {
 
     private static void addDataToDataset(DefaultCategoryDataset dataset, String stockName) {
         // 엑셀 파일 경로
-        String excelFilePath = "C:\\Users\\tori0\\Downloads\\주식시세.xlsx";
+        String excelFilePath = "C:\\Users\\user\\Documents\\카카오톡 받은 파일\\주식시세.xlsx";
 
         try (FileInputStream file = new FileInputStream(excelFilePath);
              Workbook workbook = new XSSFWorkbook(file)) {

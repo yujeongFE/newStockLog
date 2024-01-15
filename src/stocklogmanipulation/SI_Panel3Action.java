@@ -10,7 +10,6 @@ import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 // 패널 3에 대한 동작을 처리하는 클래스
-public class PanelAction3 extends Thread {
+public class SI_Panel3Action extends Thread {
     static String[] columnNames = {"종목명", "종목코드", "현재주가", "시장 구분", "전일대비등락", "전일대비등락비"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
     private static final long UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24시간
@@ -114,7 +113,7 @@ public class PanelAction3 extends Thread {
                             // 여기서 선택된 행의 데이터를 얻을 수 있어요.
                             String stockName = (String) tableModel.getValueAt(row, 0); // 종목명은 첫 번째 열(인덱스 0)
                             // System.out.println(stockName);
-                            new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                            new StockInfo(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
                         }
                     }
                 });
@@ -280,7 +279,7 @@ public class PanelAction3 extends Thread {
         return node.getNodeValue();
     }
 
-    private static void InterestStockFrame(DefaultTableModel tableModel, Object[] row, String userId) {
+    public static void InterestStockFrame(DefaultTableModel tableModel, Object[] row, String userId) {
         JFrame interestFrame = new JFrame("관심 주식 추가");
         interestFrame.setLocation(200, 400);
         JPanel panel = new JPanel();
@@ -371,7 +370,10 @@ public class PanelAction3 extends Thread {
                         for (int i = 0; i < itemList.getLength(); i++) {
                             Element item = (Element) itemList.item(i);
                             String itemName = item.getElementsByTagName("itmsNm").item(0).getTextContent();
-                            listModel.addElement(itemName);
+
+                            if (!listModel.contains(itemName)) {
+                                listModel.addElement(itemName);
+                            }
                         }
                         DefaultListModel<String> newModel = new DefaultListModel<>();
                         for (int i = 0; i < listModel.size(); i++) {

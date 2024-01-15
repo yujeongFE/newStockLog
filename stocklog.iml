@@ -7,11 +7,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="mysql-connector-j-8.0.32" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://D:/user/School/Java/commons-collections4-4.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../json-simple-1.1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -20,7 +19,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://D:/user/School/Java/commons-compress-1.21.jar!/" />
+          <root url="jar://$MODULE_DIR$/../jsoup-1.17.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -29,99 +28,23 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://D:/user/School/Java/gson-2.8.9.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/commons-collections4-4.4.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/commons-compress-1.21.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/commons-io-2.15.1.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/commons-lang3-3.12.0.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/gson-2.8.9.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/jfreechart-1.5.3.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/json-20231013.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/json-simple-1.1.1.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/mysql-connector-j-8.0.32.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/ooxml-schemas-1.4.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/poi-4.1.2.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/poi-ooxml-4.1.2.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/xmlbeans-3.1.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/jfreechart-1.5.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/json-20231013.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/json-simple-1.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/ooxml-schemas-1.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/poi-4.1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/poi-ooxml-4.1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/poi-ooxml-schemas-4.1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/xmlbeans-3.1.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/jsoup-1.14.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/user/School/Java/commons-lang3-3.12.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/Desktop/json-20231013-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES />
       </library>
     </orderEntry>

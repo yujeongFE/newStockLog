@@ -30,24 +30,23 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 // 패널 6에 대한 동작을 처리하는 클래스
-class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
-    static Object[] row = new Object[8];
-    static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "매매비용(세금, 수수료)", "메모"};
+class SI_Panel6Action { // 특정 주식에 대한 매도, 매수 리스트
+    static Object[] row = new Object[9];
+    static String[] columnNames = {"종목명", "증권사", "매도/매수", "날짜", "주식단가", "수량", "수익률", "매매비용(세금, 수수료)", "메모"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
 
     // Declare searchList as a class field
     private static JList<String> searchList;
     static String id;
-    public static void addFunctionality(JPanel panel, String userId) {
+    public static void addFunctionality(JPanel panel, String userId, String stockName) {
         DBconnection dbConnector = new DBconnection();
         Connection connection = dbConnector.getConnection();
 
         id = userId;
-        String query = "SELECT s.NAME, l.COMPANY, l.BUYORSELL, l.DATE, l.PRICE, l.QTY, l.TAX, l.MEMO FROM stock s, log l WHERE s.CODE = l.CODE AND U_ID = '" + id + "'";
+        String query = "SELECT s.NAME, l.COMPANY, l.BUYORSELL, l.DATE, l.PRICE, l.QTY, l.RRATIO, l.TAX, l.MEMO FROM stock s, log l WHERE s.CODE = l.CODE AND U_ID = '" + id + "' AND s.Name = '" + stockName + "'";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-
 
             while (resultSet.next()) {
                 row[0] = resultSet.getObject(1);
@@ -58,6 +57,7 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
                 row[5] = resultSet.getObject(6);
                 row[6] = resultSet.getObject(7);
                 row[7] = resultSet.getObject(8);
+                row[8] = resultSet.getObject(9);
                 tableModel.addRow(row);
             }
 
@@ -95,7 +95,7 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
 
                         // 여기서 선택된 행의 데이터
                         String stockName = (String) tableModel.getValueAt(row, 0);
-                        new StockInfo_new(userId, stockName);
+                        new StockInfo(userId, stockName);
                     }
                 }
             });
@@ -226,9 +226,19 @@ class PanelAction6 { // 특정 주식에 대한 매도, 매수 리스트
                     Element itemElement = (Element) itemNode;
                     String itemName = itemElement.getElementsByTagName("itmsNm").item(0).getTextContent();
                     String scode = itemElement.getElementsByTagName("srtnCd").item(0).getTextContent();
-                    // listModel.addElement(itemName);
-                    listModel.addElement(itemName + " (" + scode + ")");
-                    // listModel.addElement(new SearchResult(itemName, scode));
+
+                    boolean isDuplicate = false;
+                    for (int j = 0; j < listModel.size(); j++) {
+                        String existingItem = listModel.getElementAt(j);
+                        if (existingItem.startsWith(itemName)) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+
+                    if (!isDuplicate) {
+                        listModel.addElement(itemName + " (" + scode + ")");
+                    }
                 }
             }
 

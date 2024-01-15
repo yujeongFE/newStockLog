@@ -11,26 +11,17 @@ import javax.swing.table.JTableHeader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Scanner;
 
 // 패널 6에 대한 동작을 처리하는 클래스
-class PanelAction4 { // 특정 주식에 대한 매도, 매수 리스트
+class SI_Panel4Action { // 특정 주식에 대한 매도, 매수 리스트
     static String[] columnNames = {"기준일자", "종목명", "종목단축코드", "시장구분", "종가", "전일대비등락", "전일대비등락비", "시가", "고가"};
     static DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
     public static void addFunctionality(JPanel panel, String stockName) {
