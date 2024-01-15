@@ -71,49 +71,48 @@ public class Panel4Action { // 보유주식
                     }
                 } else {
                 }
-
-                // JLabel 생성 및 패널에 추가
-                JLabel label = new JLabel("보유 주식", SwingConstants.CENTER); // SwingConstants.CENTER로 가운데 정렬
-                panel.add(label, BorderLayout.NORTH); // BorderLayout의 NORTH 위치에 추가
-
-                // 테이블 생성 및 패널에 추가
-                JTable table = new JTable(tableModel);
-                JTableHeader header = table.getTableHeader();
-                header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
-
-                table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-
-                // 주식 클릭하면 Home2 화면으로 이동
-                table.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (e.getClickCount() == 1) { // 클릭 확인
-                            JTable target = (JTable) e.getSource();
-                            int row = target.getSelectedRow();
-
-                            // 여기서 선택된 행의 데이터를 얻을 수 있어요.
-                            String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
-                            // System.out.println(stockName);
-                            new StockInfo_new(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
-                        }
-                    }
-                });
-
-                // 테이블 크기 조정
-                table.setPreferredScrollableViewportSize(table.getPreferredSize());
-
-                // JScrollPane으로 테이블을 감싸기
-                JScrollPane scrollPane = new JScrollPane(table);
-
-                // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
-                Dimension panelSize = panel.getPreferredSize();
-                int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
-
-                scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
-
-                // 패널에 JScrollPane 추가
-                panel.add(scrollPane, BorderLayout.CENTER);
             }
+            // JLabel 생성 및 패널에 추가
+            JLabel label = new JLabel("보유 주식", SwingConstants.CENTER); // SwingConstants.CENTER로 가운데 정렬
+            panel.add(label, BorderLayout.NORTH); // BorderLayout의 NORTH 위치에 추가
+
+            // 테이블 생성 및 패널에 추가
+            JTable table = new JTable(tableModel);
+            JTableHeader header = table.getTableHeader();
+            header.setFont(header.getFont().deriveFont(Font.BOLD, 17));
+
+            table.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+
+            // 주식 클릭하면 Home2 화면으로 이동
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 1) { // 클릭 확인
+                        JTable target = (JTable) e.getSource();
+                        int row = target.getSelectedRow();
+
+                        // 여기서 선택된 행의 데이터를 얻을 수 있어요.
+                        String stockName = (String) tableModel.getValueAt(row, 1); // 종목명은 두 번째 열(인덱스 1)
+                        // System.out.println(stockName);
+                        new StockInfo(userId, stockName); // 종목명을 이용해 페이지를 열거나 처리하는 함수 호출
+                    }
+                }
+            });
+
+            // 테이블 크기 조정
+            table.setPreferredScrollableViewportSize(table.getPreferredSize());
+
+            // JScrollPane으로 테이블을 감싸기
+            JScrollPane scrollPane = new JScrollPane(table);
+
+            // JScrollPane의 세로 크기를 조정하여 패널 세로 크기의 2/3로 설정
+            Dimension panelSize = panel.getPreferredSize();
+            int newScrollPaneHeight = (int) (panelSize.height * 0.66); // 2/3의 크기
+
+            scrollPane.setPreferredSize(new Dimension(0, newScrollPaneHeight)); // 가로 크기는 자동으로 조정됨
+
+            // 패널에 JScrollPane 추가
+            panel.add(scrollPane, BorderLayout.CENTER);
 
         } catch (SQLException e) {
             e.printStackTrace();
